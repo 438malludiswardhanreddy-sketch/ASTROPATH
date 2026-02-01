@@ -1,0 +1,13 @@
+# Lightweight requirements for CI import tests (exclude heavy packages like tensorflow)
+numpy
+opencv-python
+flask
+requests
+pynmea2
+pyserial
+pandas
+scikit-learn
+Pillow
+urllib3
+geocoder
+python-dotenv
