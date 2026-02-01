@@ -457,9 +457,9 @@ This project is open-source. Please provide attribution to ASTROPATH & Solapur M
 
 **ASTROPATH Hackathon Project (2026)**
 
-- **Lead:** [Your Name]
+- **Lead:MALLU DISWARDHAN REDDY
 - **Organization:** Solapur Municipality / Academic Institution
-- **Email:** contact@astropath.local
+- **Email:438malludiswardhanreddy@gmail.com
 
 ---
 
