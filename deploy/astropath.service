@@ -1,0 +1,16 @@
+[Unit]
+Description=ASTROPATH Dashboard (Gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/astropath
+# Adjust ExecStart to point to your virtualenv's gunicorn binary
+ExecStart=/opt/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:5000 "src.dashboard:create_app()"
+Restart=on-failure
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
