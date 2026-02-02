@@ -47,6 +47,7 @@ data/*.avi
 
 # Detections & Uploads (output)
 detections/
+detections.db
 uploads/
 
 # Logs

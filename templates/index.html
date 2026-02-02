@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ASTROPATH - Smart Road Damage Detection System">
+    <title>ASTROPATH - Real-time Pothole Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-road"></i>
+                    <h1>ASTROPATH</h1>
+                </div>
+                <nav class="nav">
+                    <a href="/" class="nav-link active">
+                        <i class="fas fa-video"></i> Live Detection
+                    </a>
+                    <a href="/dashboard" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i> Dashboard
+                    </a>
+                    <a href="#upload" class="nav-link" onclick="showUploadModal()">
+                        <i class="fas fa-cloud-upload-alt"></i> Report
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Info Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-detections">0</h3>
+                        <p>Total Detections</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="gps-status">Checking...</h3>
+                        <p>GPS Status</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="current-location">Loading...</h3>
+                        <p>Current Location</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="system-status">Active</h3>
+                        <p>System Status</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Feed Section -->
+            <div class="detection-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-video"></i> Live Camera Feed</h2>
+                    <div class="controls">
+                        <select id="camera-source" class="control-select">
+                            <option value="0">Default Webcam</option>
+                            <option value="1">External Camera</option>
+                            <option value="esp32">ESP32-CAM</option>
+                            <option value="phone">Phone Camera</option>
+                        </select>
+                        <button id="toggle-detection" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Start Detection
+                        </button>
+                    </div>
+                </div>
+
+                <div class="video-container">
+                    <img id="video-feed" src="" alt="Video Feed" class="video-stream">
+                    <div class="video-overlay">
+                        <div class="detection-badge">
+                            <i class="fas fa-circle pulse"></i> LIVE
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detection Instructions -->
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> How to Use:</h3>
+                    <ol>
+                        <li>Select your camera source from the dropdown</li>
+                        <li>Click "Start Detection" to begin monitoring</li>
+                        <li>The system will automatically detect and track potholes</li>
+                        <li>All detections are saved with GPS coordinates</li>
+                        <li>View all detections on the Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Recent Detections -->
+            <div class="recent-detections">
+                <h2><i class="fas fa-history"></i> Recent Detections</h2>
+                <div id="detections-list" class="detections-list">
+                    <p class="no-data">No recent detections. Start detection to begin monitoring.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Upload Modal -->
+        <div id="upload-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Report a Pothole</h2>
+                    <button class="close-btn" onclick="closeUploadModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload-form">
+                        <div class="form-group">
+                            <label for="pothole-image">
+                                <i class="fas fa-camera"></i> Take/Upload Photo
+                            </label>
+                            <input type="file" id="pothole-image" accept="image/*" capture="environment" required>
+                            <div id="image-preview" class="image-preview"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="severity">
+                                <i class="fas fa-exclamation-circle"></i> Severity Level
+                            </label>
+                            <select id="severity" required>
+                                <option value="Low">Low - Minor crack or small pothole</option>
+                                <option value="Medium" selected>Medium - Noticeable pothole</option>
+                                <option value="High">High - Large pothole or dangerous condition</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">
+                                <i class="fas fa-comment"></i> Description (Optional)
+                            </label>
+                            <textarea id="description" rows="3" placeholder="Describe the road condition..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-map-marker-alt"></i> Location
+                            </label>
+                            <div class="location-info">
+                                <span id="upload-location">Detecting location...</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-paper-plane"></i> Submit Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 ASTROPATH - Smart Road Damage Reporting System | Solapur Municipal Corporation</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

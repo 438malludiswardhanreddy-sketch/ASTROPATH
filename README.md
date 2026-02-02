@@ -1,436 +1,421 @@
-# 🚨 ASTROPATH - Smart Road Damage Reporting & Rapid Response System
+# 🚨 ASTROPATH - Smart Road Damage Detection & Rapid Response System
 
-**A complete smart city solution for automated pothole and road damage detection, reporting, and management** combining citizen reporting, drone-based scanning, AI analysis, and cloud-based tracking.
+**Complete AI-powered pothole detection system with webcam, mobile, ESP32-CAM, and drone support**
 
-## 📋 Project Overview
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]()
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.8%2B-green)]()
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.13%2B-orange)]()
+[![License](https://img.shields.io/badge/License-Open%20Source-brightgreen)]()
 
-ASTROPATH is an integrated platform designed for **Solapur Municipal Corporation** (and scalable to any city) that:
+---
 
-- **Detects** potholes and road cracks using YOLOv4-tiny + CNN classifier
-- **Estimates severity** using multi-factor analysis (area, confidence, depth)
-- **Processes on edge** (Raspberry Pi, ESP32-CAM) for low-latency response
-- **Enables citizen reporting** via web form with geolocation
-- **Integrates drone surveillance** for high-coverage inspection
-- **Tracks repairs** with before/after verification
-- **Provides dashboard** for city officials with real-time heatmaps
+## 🚀 Quick Start (30 Seconds!)
 
-### Key Features
+### Windows
+```powershell
+.\start.ps1
+```
 
-✅ **Dual Detection Modes:**
-- Autonomous edge detection (Pi-based surveillance)
-- Citizen crowdsourcing via mobile browser
+### Linux/Mac
+```bash
+./start.sh
+```
 
-✅ **Advanced Analysis:**
-- Transfer learning classifier (MobileNetV2)
-- Multi-class severity estimation (Low/Medium/High)
-- Simulated depth sensing (ultrasonic-ready)
+**Then open:** http://localhost:5000
 
-✅ **Scalable Architecture:**
-- Modular Python codebase
-- Cloud API ready (Firebase/Google Cloud compatible)
-- TFLite for embedded deployment
+---
 
-✅ **Smart Routing:**
-- Geolocation via GPS or IP fallback
-- Automatic drone deployment prioritization
-- Repair crew optimization
+## ✨ Features
+
+### 🎥 Multi-Source Detection
+- ✅ Webcam (built-in or USB)
+- ✅ ESP32-CAM (wireless)
+- ✅ Phone camera (mobile browser)
+- ✅ **Drone video stream** (RTSP/UDP/HTTP)
+- ✅ Video files (post-processing)
+
+### 🛰️ GPS & Location
+- ✅ IP-based geolocation (no hardware)
+- ✅ GPS module support (u-blox, NEO-6M)
+- ✅ Phone GPS (from mobile browser)
+- ✅ **Drone telemetry** (MAVLink)
+
+### 🔍 AI Detection
+- ✅ YOLOv4-tiny object detection
+- ✅ MobileNetV2 classification
+- ✅ Severity estimation (Low/Medium/High)
+- ✅ Confidence scoring
+- ✅ **Ground GPS projection from drone**
+
+### 🌐 Web Interface
+- ✅ Live video feed with detection
+- ✅ Interactive map (Leaflet.js)
+- ✅ Heatmap visualization
+- ✅ Citizen reporting
+- ✅ RESTful API
+- ✅ Mobile-responsive design
+
+---
+
+## 📋 What You Need
+
+### Required
+- Python 3.8+
+- Webcam or video source
+- Internet connection (for model download)
+
+### Optional
+- GPS module (for precise location)
+- ESP32-CAM (for wireless camera)
+- Drone with video streaming
+- CUDA-enabled GPU (for faster processing)
 
 ---
 
 ## 🏗️ Project Structure
 
 ```
-ASTROPATH/
-├── README.md                          # This file
-├── requirements.txt                   # Python dependencies
-├── config.py                          # Centralized configuration
-├── models/
-│   ├── yolov4-tiny.weights           # Pre-trained YOLO weights
-│   ├── yolov4-tiny.cfg               # YOLO architecture config
-│   ├── obj.names                     # Class names (e.g., "pothole")
-│   └── custom_classifier.h5          # Trained MobileNetV2 model
-├── src/
-│   ├── __init__.py
-│   ├── utils.py                      # Logging, geolocation, image processing
-│   ├── train_classifier.py           # Training script (improved from main.py)
-│   ├── detect_edge.py                # Edge detection pipeline (Pi-ready)
-│   ├── api_client.py                 # Cloud API communication
-│   └── citizen_upload.py             # Flask web app for citizen reports
-├── data/
-│   ├── training_images/
-│   │   ├── pothole/                  # Pothole images
-│   │   └── plain/                    # Plain road images
-│   └── test.mp4                      # Test video file
-├── detections/                        # Output detections & frames
-└── uploads/                           # Citizen-submitted images
+ASTROPATH-1/
+├── app.py                  # Main web application
+├── main.py                 # CLI interface with menu
+├── config.py               # Configuration settings
+├── requirements.txt        # Python dependencies
+│
+├── start.ps1              # Windows quick start
+├── start.sh               # Linux/Mac quick start
+│
+├── src/                   # Source code
+│   ├── detect_edge.py     # Edge detection module
+│   ├── drone_detector.py  # Drone detection
+│   ├── drone_controller.py # Drone video & telemetry
+│   ├── gps_handler.py     # GPS integration
+│   ├── database.py        # Database operations
+│   ├── dashboard.py       # Web dashboard
+│   ├── citizen_upload.py  # Citizen reporting
+│   └── esp32_camera.py    # ESP32-CAM support
+│
+├── templates/             # HTML templates
+│   ├── index.html        # Main interface
+│   └── dashboard.html    # Map dashboard
+│
+├── static/               # CSS/JS files
+│   ├── css/style.css
+│   └── js/*.js
+│
+├── models/               # AI models
+│   ├── yolov4-tiny.weights (download required)
+│   ├── yolov4-tiny.cfg
+│   └── obj.names
+│
+├── Dockerfile            # Docker container
+├── docker-compose.yml    # Docker Compose setup
+│
+└── Documentation/
+    ├── README.md         # This file
+    ├── DEPLOY_GUIDE.md   # Deployment guide
+    ├── DRONE_GUIDE.md    # Drone setup
+    ├── ESP32_CAM_SETUP.md
+    └── GPS_SETUP_GUIDE.md
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🎯 Usage Modes
 
-### Prerequisites
-
-- **Python 3.8+**
-- **Windows/Linux/Raspberry Pi OS**
-- **pip** (Python package manager)
-
-### 1. Installation
+### 1. Web Application (Recommended)
 
 ```bash
-# Clone or navigate to the repository
-cd ASTROPATH
-
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+python app.py
 ```
+- **Main page:** http://localhost:5000
+- **Dashboard:** http://localhost:5000/dashboard
+- Features: Live detection, citizen reporting, map view
 
-### 2. Download Model Files
-
-The repo requires pre-trained YOLOv4-tiny weights:
+### 2. Interactive Menu
 
 ```bash
-# Download YOLOv4-tiny weights (196 MB)
-wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights
-mv yolov4-tiny.weights models/
+python main.py
+```
+Choose from:
+1. Train classifier
+2. Run edge detection
+3. Start dashboard
+4. Citizen reporting app
+5. Configure settings
+6. Test GPS
+7. Test ESP32-CAM
+8. Test API
 
-# YOLOv4-tiny config is already in repo
-# YOLOv4-tiny class names (one per line)
-echo "pothole" > models/obj.names
+### 3. Drone Mode
+
+```bash
+# Test stream first
+python test_drone_stream.py
+
+# Run detection
+python src/drone_detector.py
 ```
 
-Or download via browser and place in `models/` folder.
+### 4. Command Line Detection
 
-### 3. Configuration
+```bash
+# With webcam
+python -c "from src.detect_edge import main; main()"
+
+# With video file
+# Set CAMERA_SOURCE in config.py to video path
+```
+
+---
+
+## ⚙️ Configuration
 
 Edit `config.py` to customize:
 
 ```python
-# Camera/Input
-CAMERA_SOURCE = 0  # 0 = webcam, or "path/to/video.mp4"
+# Camera source
+CAMERA_SOURCE = 0  # 0=webcam, 1=USB, "URL"=stream
 
-# API Endpoint (set when cloud backend is ready)
-API_URL = "http://your-server.com/api"
-ENABLE_CLOUD_UPLOAD = False  # Set to True when ready
+# Detection thresholds
+CONF_THRESHOLD = 0.5  # Lower = more detections
+NMS_THRESHOLD = 0.4
 
-# Raspberry Pi
-PI_OPTIMIZE = False  # Enable TFLite for edge devices
+# GPS settings
+GPS_ENABLED = False
+GPS_PORT = 'COM3'  # Windows
 
-# Geolocation
-USE_GPS_MODULE = False  # True if using real GPS on Pi
+# Drone settings
+DRONE_ENABLED = False
+DRONE_STREAM_URL = "rtsp://192.168.1.100:8554/video"
+
+# Server settings
+FLASK_HOST = "0.0.0.0"  # Allow network access
+FLASK_PORT = 5000
+
+# Performance
+FAST_MODE = True
+DETECTION_FRAME_SKIP = 2
 ```
 
 ---
 
-## 📖 Usage Guide
+## 🚁 Drone Support
 
-### A. Train Pothole Classifier
+ASTROPATH supports aerial road inspection with drones:
 
-Prepare your dataset:
+### Supported Drones
+- DJI (Mavic 3, Mini 3 Pro, Air 2S, Phantom 4)
+- Autel EVO II
+- Skydio 2+
+- Pixhawk/ArduPilot (custom drones)
+- Any drone with RTSP/UDP video streaming
+
+### Quick Start
+```bash
+# 1. Configure drone stream
+DRONE_STREAM_URL = "rtsp://192.168.1.100:8554/video"
+
+# 2. Test connection
+python test_drone_stream.py
+
+# 3. Run survey
+python src/drone_detector.py
 ```
+
+**See `DRONE_GUIDE.md` for complete drone setup instructions.**
+
+---
+
+## 📱 Mobile Access
+
+Access from phone/tablet:
+
+1. Start app on PC: `python app.py`
+2. Find PC IP: `ipconfig` (Windows) or `ifconfig` (Linux)
+3. On phone, open: `http://YOUR_PC_IP:5000`
+4. Use phone camera to report potholes
+
+---
+
+## 🐳 Docker Deployment
+
+```bash
+# Quick deploy
+docker-compose up -d
+
+# Or build manually
+docker build -t astropath .
+docker run -p 5000:5000 astropath
+```
+
+---
+
+## ☁️ Cloud Deployment
+
+### Heroku
+```bash
+heroku create astropath-app
+git push heroku main
+```
+
+### AWS/DigitalOcean/Linode
+```bash
+# SSH to server
+git clone YOUR_REPO
+cd ASTROPATH-1
+./start.sh
+```
+
+**See `DEPLOY_GUIDE.md` for detailed instructions.**
+
+---
+
+## 📊 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Main web interface |
+| `/dashboard` | GET | Map dashboard |
+| `/api/detections` | GET | Get all detections |
+| `/api/stats` | GET | Get statistics |
+| `/api/location` | GET | Get current GPS |
+| `/api/upload` | POST | Upload citizen report |
+| `/health` | GET | Health check |
+
+### Example API Usage
+
+```python
+import requests
+
+# Get detections
+response = requests.get('http://localhost:5000/api/detections?limit=10')
+data = response.json()
+
+# Upload report
+files = {'image': open('pothole.jpg', 'rb')}
+data = {'severity': 'High', 'latitude': 17.66, 'longitude': 75.90}
+requests.post('http://localhost:5000/api/upload', files=files, data=data)
+```
+
+---
+
+## 🔧 Advanced Setup
+
+### Add GPS Module
+
+1. Connect GPS via USB/Serial
+2. Update `config.py`:
+   ```python
+   GPS_ENABLED = True
+   GPS_PORT = 'COM3'  # or '/dev/ttyUSB0'
+   ```
+3. Test: `python test_gps.py`
+
+### Add ESP32-CAM
+
+1. Flash ESP32-CAM with code from `ESP32_CAM_SETUP.md`
+2. Update `config.py`:
+   ```python
+   CAMERA_SOURCE = "http://192.168.1.100:81/stream"
+   ```
+3. Test: `python src/esp32_camera.py`
+
+### Train Custom Model
+
+```bash
+# 1. Organize training data
 data/training_images/
 ├── pothole/  (100+ images)
 └── plain/    (100+ images)
-```
 
-**Train the model:**
-
-```bash
+# 2. Train
 python src/train_classifier.py
+
+# 3. Model saved to models/custom_classifier.h5
 ```
-
-**Output:**
-- `models/custom_classifier.h5` - Trained model
-- `models/custom_classifier.tflite` - Optimized for Raspberry Pi
-
-### B. Run Edge Detection
-
-**On Laptop/Desktop (with webcam):**
-
-```bash
-python src/detect_edge.py
-```
-
-**On Raspberry Pi:**
-
-```bash
-# Configure for Pi
-# Edit config.py: PI_OPTIMIZE = True, CAMERA_SOURCE = 0
-
-python src/detect_edge.py
-
-# Press 'q' to quit
-```
-
-**On Drone (via video stream):**
-
-```python
-# In config.py, update:
-# CAMERA_SOURCE = "udp://192.168.1.100:5000"  # Drone IP & port
-
-python src/detect_edge.py
-```
-
-### C. Citizen Reporting (Web App)
-
-Start the Flask web app:
-
-```bash
-python src/citizen_upload.py
-```
-
-**Access at:** `http://localhost:5000`
-
-Features:
-- 📍 Auto-detect user location (browser geolocation)
-- 📸 Upload photo
-- 📝 Add description
-- 🚀 Submit report to cloud
-
-### D. API Client (Cloud Integration)
-
-```python
-from src.api_client import APIClient
-
-client = APIClient("http://your-cloud-server.com/api")
-
-# Submit detection
-success, response = client.report_detection({
-    'latitude': 17.3629,
-    'longitude': 75.8930,
-    'severity': 'High',
-    'confidence': 0.87,
-    'image_path': 'path/to/image.jpg'
-})
-
-# Check repair status
-success, data = client.get_detection_by_id('detection_123')
-
-# Get heatmap
-success, heatmap = client.get_heatmap_data()
-```
-
----
-
-## 🔧 Advanced Configuration
-
-### Raspberry Pi Deployment
-
-**1. Install TensorFlow Lite:**
-
-```bash
-pip install tensorflow-lite
-```
-
-**2. Enable Pi optimizations in `config.py`:**
-
-```python
-PI_OPTIMIZE = True
-IMG_SIZE_YOLO = 320  # Smaller for faster inference
-DETECTION_FRAME_SKIP = 2  # Process every 2nd frame
-```
-
-**3. Convert classifier to TFLite:**
-
-```python
-from src.train_classifier import PotholeClassifierTrainer
-
-trainer = PotholeClassifierTrainer()
-trainer.model = load_model('models/custom_classifier.h5')
-trainer.convert_to_tflite()
-```
-
-### Multi-Class Detection (Cracks, Potholes)
-
-**1. Train YOLO on RDD2022 dataset:**
-
-```bash
-# Modify config.py obj.names:
-# pothole
-# longitudinal_crack
-# transverse_crack
-# alligator_crack
-
-# Use Darknet/YOLO training pipeline (external)
-```
-
-**2. Update `detect_edge.py` to handle multiple classes**
-
-### GPS Integration on Pi
-
-**1. Install gpsd:**
-
-```bash
-sudo apt-get install gpsd gpsd-clients
-```
-
-**2. Enable in `config.py`:**
-
-```python
-USE_GPS_MODULE = True
-```
-
-### Cloud Dashboard (Leaflet + Folium)
-
-Example visualization template (place in `src/dashboard.py`):
-
-```python
-import folium
-from folium.plugins import HeatMap
-
-def create_map(detections):
-    m = folium.Map(location=[17.3629, 75.8930], zoom_start=13)
-    
-    heat_data = [[d['lat'], d['lon'], d['severity_score']] 
-                 for d in detections]
-    HeatMap(heat_data).add_to(m)
-    
-    m.save('dashboard.html')
-```
-
----
-
-## 📊 Model Details
-
-### Classifier (Pothole Detection)
-
-- **Base Model:** MobileNetV2 (ImageNet pre-trained)
-- **Task:** Binary classification (Pothole vs. Plain Road)
-- **Input:** 224×224 RGB
-- **Augmentation:** Rotation, shift, zoom, flip
-- **Output:** Sigmoid (0-1 probability)
-
-### Detector (Localization)
-
-- **Model:** YOLOv4-tiny
-- **Input:** 416×416 (configurable)
-- **FPS:** ~10-15 on Pi, ~30+ on laptop
-- **Classes:** Expandable (default: "pothole")
-
-### Severity Estimation
-
-Currently uses heuristic:
-
-```
-Severity = f(BBox_Area_Ratio, Classifier_Confidence)
-
-Low:    Area < 1% of frame
-Medium: 1% ≤ Area < 5%
-High:   Area ≥ 5%
-```
-
-**Future:** Integrate ultrasonic depth sensor or stereo depth estimation.
-
----
-
-## 🔄 API Endpoints (Expected Cloud Implementation)
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/report` | POST | Submit detection |
-| `/api/update-status` | POST | Update repair status |
-| `/api/detection/<id>` | GET | Fetch detection details |
-| `/api/detections` | GET | List recent detections |
-| `/api/heatmap` | GET | Get geospatial heatmap |
-| `/api/request-drone` | POST | Request drone inspection |
-| `/api/citizen-report` | POST | Submit citizen report |
-| `/api/status` | GET | Check API health |
-
----
-
-## 🧪 Testing & Debugging
-
-### Test with Demo Video
-
-```python
-# In config.py:
-DEMO_VIDEO_PATH = "data/test.mp4"
-CAMERA_SOURCE = DEMO_VIDEO_PATH
-
-python src/detect_edge.py
-```
-
-### Verbose Logging
-
-```python
-# In config.py:
-DEBUG_MODE = True
-LOG_LEVEL = "DEBUG"
-SAVE_DEBUG_FRAMES = True  # Save each processed frame
-```
-
-### API Testing
-
-```bash
-python src/api_client.py  # Runs test_api() function
-```
-
----
-
-## 📦 Deployment Checklist
-
-- [ ] Models downloaded and placed in `models/`
-- [ ] Training data organized in `data/training_images/`
-- [ ] Classifier trained: `python src/train_classifier.py`
-- [ ] Config.py updated with your API endpoint
-- [ ] Edge device (Pi) configured and tested
-- [ ] Citizen app accessible via web
-- [ ] Cloud backend ready to receive API calls
-- [ ] Geolocation (GPS or IP) configured
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Model Files Not Found
-
-```
-Error: YOLO model files not found
-Solution: Download yolov4-tiny.weights to models/
-```
-
-### TensorFlow Import Error
-
-```
-Error: No module named 'tensorflow'
-Solution: pip install tensorflow
+### Camera not working
+```bash
+# Test cameras
+python -c "import cv2; print([cv2.VideoCapture(i).isOpened() for i in range(4)])"
 ```
 
-### Raspberry Pi: Out of Memory
-
+### YOLO model missing
 ```
-Solution: Enable SWAP, use TFLite, reduce YOLO input size
-```
+Download:
+https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights
 
-### API Connection Failed
-
-```
-Solution: Check API_URL in config.py, verify network connectivity
+Save to: models/yolov4-tiny.weights
 ```
 
-### Low FPS on Raspberry Pi
+### Port already in use
+```powershell
+# Windows
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
 
+# Or change port in config.py
+FLASK_PORT = 8000
 ```
-Optimize:
-- Reduce IMG_SIZE_YOLO to 320
-- Increase DETECTION_FRAME_SKIP
-- Use TFLite instead of full TensorFlow
+
+### Low FPS
+```python
+# Optimize performance
+FAST_MODE = True
+FAST_IMG_SIZE_YOLO = 320
+DETECTION_FRAME_SKIP = 3
 ```
 
 ---
 
-## 📚 References & Resources
+## 📚 Documentation
 
-- **YOLOv4-tiny:** https://github.com/AlexeyAB/darknet
-- **RDD2022 Dataset:** https://data.mendeley.com/datasets/nz6yz6d68r
-- **TensorFlow Lite:** https://www.tensorflow.org/lite
-- **Raspberry Pi ML:** https://www.raspberrypi.org/
-- **Flask:** https://flask.palletsprojects.com/
-- **Leaflet Maps:** https://leafletjs.com/
+| File | Description |
+|------|-------------|
+| `README.md` | This file - Overview & quick start |
+| `START_HERE.md` | Detailed getting started guide |
+| `DEPLOY_GUIDE.md` | Production deployment |
+| `DRONE_GUIDE.md` | Drone integration |
+| `ESP32_CAM_SETUP.md` | ESP32-CAM setup |
+| `GPS_SETUP_GUIDE.md` | GPS configuration |
+| `QUICK_START_3_STEPS.md` | Ultra-quick guide |
+
+---
+
+## 🎯 Use Cases
+
+### Municipal Corporations
+- Automated road surveys
+- Citizen engagement platform
+- Data-driven maintenance
+- Budget optimization
+
+### Research Institutions
+- Road condition datasets
+- ML model training
+- Urban planning analysis
+
+### Drone Service Providers
+- Aerial road inspection
+- Large area surveys
+- Post-disaster assessment
+
+---
+
+## 🌟 System Capabilities
+
+| Feature | Ground Vehicle | Citizen Mobile | Drone |
+|---------|---------------|----------------|-------|
+| Speed | 1x | N/A | 20x |
+| Coverage | Limited | Point | Wide area |
+| Automation | Yes | No | Yes |
+| GPS Accuracy | High | Medium | High |
+| Cost per km | Medium | Free | Low |
+| Traffic Impact | High | None | None |
 
 ---
 
@@ -438,56 +423,74 @@ Optimize:
 
 Contributions welcome! Areas for enhancement:
 
-- Multi-class detection (cracks, potholes, potholes_large)
-- 3D depth estimation from stereo cameras
-- Drone flight planning optimization
-- Cloud dashboard UI
-- Mobile app (citizen side)
-- Real-time repair tracking
+- [ ] User authentication
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics
+- [ ] Multi-language support
+- [ ] Automated work orders
+- [ ] Integration with GIS systems
 
 ---
 
 ## 📄 License
 
-This project is open-source. Please provide attribution to ASTROPATH & Solapur Municipal Corporation.
+ASTROPATH - Smart Road Damage Reporting System
+© 2026 Solapur Municipal Corporation
+
+Open source for smart city initiatives.
 
 ---
 
 ## 👥 Team & Contact
 
-**ASTROPATH Hackathon Project (2026)**
-
-- **Lead:MALLU DISWARDHAN REDDY
-- **Organization:** Solapur Municipality / Academic Institution
-- **Email:438malludiswardhanreddy@gmail.com
+**Lead:** Mallu Diswardhan Reddy  
+**Email:** 438malludiswardhanreddy@gmail.com  
+**Organization:** Solapur Municipal Corporation
 
 ---
 
-## 🗺️ Roadmap
+## 🙏 Acknowledgments
 
-**Phase 1 (Current):** Edge detection + citizen app
-**Phase 2:** Cloud integration + dashboard
-**Phase 3:** Drone automation + repair tracking
-**Phase 4:** ML model improvement (RDD2022 training)
-**Phase 5:** Mobile app (iOS/Android)
-
----
-
-## 🎯 PPT Vision Alignment
-
-This codebase directly implements the SAMVED Hackathon 2026 PPT architecture:
-
-✅ Citizen + Drone Dual Input  
-✅ AI Analysis (YOLO + CNN)  
-✅ Severity Estimation  
-✅ Geolocation & Dashboard  
-✅ Re-verification Loop  
-✅ Raspberry Pi Edge Processing  
-✅ Modular & Scalable Design  
-
-**Ready to deploy to Solapur or any smart city!**
+- **YOLOv4-tiny:** AlexeyAB/Darknet
+- **TensorFlow:** Google
+- **OpenCV:** Open Source Computer Vision
+- **Leaflet.js:** Interactive maps
+- **Flask:** Web framework
 
 ---
 
-**Last Updated:** January 2026  
-**Version:** 1.0.0-beta
+## 🚀 Quick Commands Reference
+
+```bash
+# Start web app
+python app.py
+
+# Start with menu
+python main.py
+
+# Test drone stream
+python test_drone_stream.py
+
+# Test GPS
+python test_gps.py
+
+# Train model
+python src/train_classifier.py
+
+# Docker deploy
+docker-compose up -d
+
+# Windows quick start
+.\start.ps1
+
+# Linux quick start
+./start.sh
+```
+
+---
+
+**Made with ❤️ for Smart Cities**
+
+**ASTROPATH** - Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
+
+🚗 Ground Vehicles | 📱 Citizens | 🚁 Drones | 🌐 Real-time Dashboard

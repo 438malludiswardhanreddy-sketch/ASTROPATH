@@ -23,7 +23,7 @@ Pillow>=10.0.0
 # Geolocation & GPS
 geocoder>=1.38.1
 gpsd-py3>=0.0.1
-pynmea2>=1.20.0
+pynmea2>=1.18.0
 pyserial>=3.5
 
 # ESP32-CAM Streaming
@@ -50,4 +50,10 @@ flake8>=6.0.0
 # Documentation (optional)
 sphinx>=7.0.0
 sphinx-rtd-theme>=1.3.0
+
+# Drone Integration
+pymavlink>=2.4.37  # MAVLink telemetry protocol
+av>=10.0.0  # Video processing
+dronekit>=2.9.2  # Drone control (optional)
+
 

@@ -109,6 +109,61 @@ GPS_FALLBACK_TO_IP = True  # Use IP geolocation if GPS unavailable
 # 5. Test: python test_gps.py --port <PORT>
 
 
+# ==================== Drone Configuration ====================
+
+# Enable Drone Mode for aerial surveying
+DRONE_ENABLED = False  # Set to True when using drone
+
+# Drone Video Stream Configuration
+# Supports RTSP, UDP, HTTP/MJPEG protocols
+# Examples:
+#   RTSP: "rtsp://192.168.1.100:8554/video"
+#   UDP:  "udp://192.168.1.100:5600"
+#   HTTP: "http://192.168.1.100:8080/video"
+#   File: "/path/to/drone_video.mp4"
+
+DRONE_STREAM_URL = "rtsp://192.168.1.100:8554/video"
+
+# Drone Camera Parameters
+DRONE_CAMERA_FOV_HORIZONTAL = 90  # Field of view in degrees (horizontal)
+DRONE_CAMERA_FOV_VERTICAL = 60    # Field of view in degrees (vertical)
+DRONE_CAMERA_RESOLUTION = (1920, 1080)  # Camera resolution (width, height)
+DRONE_GIMBAL_ANGLE = -90  # Gimbal pitch angle (-90 for straight down, 0 for forward)
+
+# Drone Flight Parameters (for coordinate projection)
+DRONE_DEFAULT_ALTITUDE = 50  # Default altitude in meters
+DRONE_DEFAULT_SPEED = 5      # Default flight speed in m/s
+DRONE_MAX_ALTITUDE = 120     # Maximum legal altitude (meters)
+
+# Telemetry Source
+# Options: 'mavlink', 'manual', 'simulation'
+DRONE_TELEMETRY_SOURCE = 'simulation'  # Use 'mavlink' for real drone
+DRONE_MAVLINK_CONNECTION = 'udp:127.0.0.1:14550'  # MAVLink connection string
+
+# Detection Settings for Drone
+DRONE_DETECTION_MIN_AREA = 0.0005  # Minimum pothole area ratio (smaller from altitude)
+DRONE_DETECTION_SAVE_INTERVAL = 5   # Save detection every N frames
+DRONE_AUTO_SAVE_DETECTIONS = True   # Auto-save to database
+
+# Survey Mission Settings
+DRONE_SURVEY_OVERLAP = 30  # Overlap percentage for survey grid (10-30%)
+DRONE_SURVEY_ALTITUDE = 50  # Survey altitude in meters
+DRONE_SURVEY_SPEED = 5      # Survey speed in m/s
+
+# Recommended Drones for ASTROPATH (2026):
+# - DJI Mavic 3: Best for large area surveys, 45 min flight time
+# - DJI Mini 3 Pro: Compact, 34 min flight, good for urban areas  
+# - Autel EVO II: Dual camera, 40 min flight, enterprise grade
+# - Skydio 2+: Autonomous flight, obstacle avoidance
+# - DIY Pixhawk: Budget option, fully customizable
+#
+# Video Streaming Setup:
+# 1. Most DJI drones: Use DJI SDK or third-party apps (Dronelink, Litchi)
+# 2. Pixhawk drones: Configure video stream via GCS (Mission Planner, QGroundControl)
+# 3. RTSP stream: Most common, works with OpenCV directly
+# 4. MAVLink: For telemetry (position, altitude, heading)
+
+
 # ==================== Raspberry Pi / Edge Deployment ====================
 PI_OPTIMIZE = False  # Enable TensorFlow Lite and lightweight inference
 USE_OPENVINO = False  # Use OpenVINO for YOLO acceleration on Pi
@@ -122,10 +177,12 @@ FAST_IMG_SIZE_YOLO = 320
 # When True and OpenCV DNN built with CUDA, prefer CUDA target for inference.
 USE_CUDA = False
 
-# ==================== Citizen App Configuration ====================
+# ==================== Web Server Configuration ====================
+# FLASK_HOST = "0.0.0.0" allows access from other devices on the network
+# FLASK_HOST = "127.0.0.1" allows access ONLY from this computer
 FLASK_HOST = "0.0.0.0"
 FLASK_PORT = 5000
-FLASK_DEBUG = True
+FLASK_DEBUG = False  # Set to False for production!
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 

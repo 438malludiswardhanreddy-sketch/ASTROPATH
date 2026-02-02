@@ -40,8 +40,13 @@ class DashboardServer:
         self.db_path = db_path
         self.db = DetectionDatabase(db_path)
         
-        # Create Flask app
-        self.app = Flask(__name__)
+        # Create Flask app with explicit template and static folders
+        template_dir = os.path.join(config.BASE_DIR, 'templates')
+        static_dir = os.path.join(config.BASE_DIR, 'static')
+        
+        self.app = Flask(__name__, 
+                        template_folder=template_dir,
+                        static_folder=static_dir)
         self.app.config['DEBUG'] = config.FLASK_DEBUG
         self.app.config['JSON_SORT_KEYS'] = False
         
