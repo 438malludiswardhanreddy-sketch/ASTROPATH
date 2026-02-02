@@ -75,7 +75,7 @@ class GPSTestor:
         print("[TEST 1] GPS Connection")
         print("-" * 70)
         if not self._test_connection():
-            print("❌ FAILED: Cannot connect to GPS module")
+            print("[FAILED] FAILED: Cannot connect to GPS module")
             return False
         
         # Test 2: NMEA Parsing & Valid Fixes
@@ -111,14 +111,14 @@ class GPSTestor:
             self.gps = GPSHandler(port=self.port, baud=self.baud, timeout=2.0)
             
             if self.gps.is_connected():
-                print(f"✓ Connected to {self.port} @ {self.baud} baud")
+                print("\n[PASSED] GPS Test Complete - Success")
                 return True
             else:
-                print(f"✗ Connection failed")
+                print("[FAILED] FAILED: NMEA parsing check failed")
                 return False
         
         except Exception as e:
-            print(f"✗ Connection error: {e}")
+            print(f"[ERROR] Connection error: {e}")
             return False
     
     def _test_nmea_parsing(self):

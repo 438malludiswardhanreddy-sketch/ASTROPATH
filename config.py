@@ -112,7 +112,7 @@ GPS_FALLBACK_TO_IP = True  # Use IP geolocation if GPS unavailable
 # ==================== Drone Configuration ====================
 
 # Enable Drone Mode for aerial surveying
-DRONE_ENABLED = False  # Set to True when using drone
+DRONE_ENABLED = True  # Set to True when using drone
 
 # Drone Video Stream Configuration
 # Supports RTSP, UDP, HTTP/MJPEG protocols
@@ -142,6 +142,7 @@ DRONE_MAVLINK_CONNECTION = 'udp:127.0.0.1:14550'  # MAVLink connection string
 
 # Detection Settings for Drone
 DRONE_DETECTION_MIN_AREA = 0.0005  # Minimum pothole area ratio (smaller from altitude)
+# Add ID 9 to task.md
 DRONE_DETECTION_SAVE_INTERVAL = 5   # Save detection every N frames
 DRONE_AUTO_SAVE_DETECTIONS = True   # Auto-save to database
 

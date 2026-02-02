@@ -20,6 +20,9 @@ import config
 from src.utils import setup_logger
 from src.database import DetectionDatabase
 from src.gps_handler import GPSHandler
+# Drone integration
+from src.drone_controller import DroneController
+from src.drone_detector import DroneDetector
 
 logger = setup_logger(__name__)
 
@@ -243,34 +246,58 @@ def generate_frames(camera_source=0):
             
             # Process every Nth frame
             if frame_count % config.DETECTION_FRAME_SKIP == 0:
-                detections, processed_frame = detect_potholes(frame)
-                
-                # Save detection to database if found
-                if detections:
-                    lat, lon, source = get_location()
+                # Check for drone mode
+                if config.DRONE_ENABLED:
+                    # Initialize drone controller if needed
+                    if not hasattr(generate_frames, "drone_detector"):
+                        drone_ctrl = DroneController(stream_url=camera_source if camera_source != 0 else config.DRONE_STREAM_URL)
+                        # Mock connection if using webcam for testing
+                        if camera_source == 0:
+                            drone_ctrl.cap = camera 
+                            drone_ctrl.connected = True
+                        
+                        generate_frames.drone_detector = DroneDetector(drone_ctrl, yolo_net=yolo_net)
                     
-                    for detection in detections:
-                        # Save frame as image
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        image_filename = f"detection_{timestamp}_{frame_count}.jpg"
-                        image_path = os.path.join(config.DETECTIONS_DIR, image_filename)
+                    # DTone detection logic
+                    detector = generate_frames.drone_detector
+                    detections = detector.detect_in_frame(frame)
+                    
+                    if detections:
+                        for detection in detections:
+                             detector.save_detection(frame, detection)
+                    
+                    processed_frame = detector.annotate_frame(frame, detections, show_telemetry=True)
+                
+                else:
+                    # Standard pothole detection
+                    detections, processed_frame = detect_potholes(frame)
+                
+                    # Save detection to database if found
+                    if detections:
+                        lat, lon, source = get_location()
                         
-                        os.makedirs(config.DETECTIONS_DIR, exist_ok=True)
-                        cv2.imwrite(image_path, frame)
-                        
-                        # Add to database
-                        detection_data = {
-                            'latitude': lat,
-                            'longitude': lon,
-                            'severity': detection['severity'],
-                            'confidence': detection['confidence'],
-                            'image_path': image_path,
-                            'source': 'camera',
-                            'location_source': source
-                        }
-                        
-                        db.add_detection(detection_data)
-                        logger.info(f"Detection saved: {detection['severity']} at ({lat}, {lon})")
+                        for detection in detections:
+                            # Save frame as image
+                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            image_filename = f"detection_{timestamp}_{frame_count}.jpg"
+                            image_path = os.path.join(config.DETECTIONS_DIR, image_filename)
+                            
+                            os.makedirs(config.DETECTIONS_DIR, exist_ok=True)
+                            cv2.imwrite(image_path, frame)
+                            
+                            # Add to database
+                            detection_data = {
+                                'latitude': lat,
+                                'longitude': lon,
+                                'severity': detection['severity'],
+                                'confidence': detection['confidence'],
+                                'image_path': image_path,
+                                'source': 'camera',
+                                'location_source': source
+                            }
+                            
+                            db.add_detection(detection_data)
+                            logger.info(f"Detection saved: {detection['severity']} at ({lat}, {lon})")
             else:
                 processed_frame = frame
             
