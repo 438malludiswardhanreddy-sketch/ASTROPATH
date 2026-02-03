@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 from src.utils import setup_logger, get_geolocation, save_image, FPSCounter, ensure_dir_exists, create_detection_payload
 from src.gps_handler import GPSHandler
+from src.drone_controller import DroneController
 
 logger = setup_logger(__name__)
 
@@ -181,7 +182,7 @@ class EdgeDetectionPipeline:
         self.frame_count = 0
         self.detection_count = 0
 
-        # Initialize GPS if enabled
+        # Initialize GPS Module if enabled
         self.gps = None
         if config.GPS_ENABLED:
             try:
@@ -196,66 +197,26 @@ class EdgeDetectionPipeline:
                     logger.info(f"GPS connected on {config.GPS_PORT}")
                 else:
                     logger.warning(f"GPS module not responding on {config.GPS_PORT}")
-                    if config.GPS_FALLBACK_TO_IP:
-                        logger.info("Will use IP geolocation fallback")
             except Exception as e:
                 logger.error(f"GPS initialization failed: {e}")
-                if config.GPS_FALLBACK_TO_IP:
-                    logger.info("Will use IP geolocation fallback")
                 self.gps = None
         
+        # Initialize Drone if enabled (User's primary GPS source from Flight Controller)
+        self.drone = None
+        if getattr(config, 'DRONE_ENABLED', False):
+            try:
+                logger.info("Initializing Drone Controller for telemetry (MAVLink/FC GPS)...")
+                self.drone = DroneController(
+                    stream_url=config.DRONE_STREAM_URL,
+                    telemetry_source=config.DRONE_TELEMETRY_SOURCE
+                )
+                logger.info("✓ Drone Controller ready")
+            except Exception as e:
+                logger.error(f"Failed to initialize drone controller: {e}")
+
         ensure_dir_exists(config.DETECTIONS_DIR)
         logger.info("Pipeline ready")
 
-
-class VideoStream:
-    """Simple threaded video capture to reduce frame latency."""
-    def __init__(self, src=0):
-        self.src = src
-        self.cap = cv2.VideoCapture(src)
-        self.stopped = False
-        self.frame = None
-        self.lock = threading.Lock()
-        self.thread = None
-
-    def start(self):
-        if self.thread is None:
-            self.thread = threading.Thread(target=self.update, daemon=True)
-            self.thread.start()
-        return self
-
-    def update(self):
-        while not self.stopped:
-            try:
-                ret, frame = self.cap.read()
-            except Exception:
-                ret = False
-                frame = None
-
-            if not ret or frame is None:
-                time.sleep(0.01)
-                continue
-
-            with self.lock:
-                self.frame = frame
-
-    def read(self):
-        with self.lock:
-            if self.frame is None:
-                return None
-            # Return a copy to avoid race conditions
-            return self.frame.copy()
-
-    def stop(self):
-        self.stopped = True
-        if self.thread:
-            self.thread.join(timeout=0.5)
-        try:
-            if self.cap and self.cap.isOpened():
-                self.cap.release()
-        except Exception:
-            pass
-    
     def process_frame(self, frame):
         """Process single frame: detect -> estimate severity -> annotate"""
         self.frame_count += 1
@@ -273,7 +234,7 @@ class VideoStream:
             if det['confidence'] < 0.6:
                 continue
             
-            # Estimate severity (pass frame first, then detection)
+            # Estimate severity
             severity, severity_score = self.severity_estimator.estimate(frame, det, frame.shape)
             det['severity'] = severity
             det['severity_score'] = severity_score
@@ -302,17 +263,24 @@ class VideoStream:
         """Draw bounding boxes and labels on frame"""
         annotated = frame.copy()
         
+        # Add telemetry overlay if drone is active
+        if self.drone:
+            try:
+                telemetry = self.drone.get_telemetry()
+                y_pos = annotated.shape[0] - 30
+                cv2.putText(annotated, f"FC GPS: {telemetry['latitude']:.6f}, {telemetry['longitude']:.6f}", 
+                           (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+                cv2.putText(annotated, f"ALT: {telemetry['altitude']:.1f}m HDG: {telemetry['heading']:.0f} deg", 
+                           (10, y_pos - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+            except:
+                pass
+
         for det in detections:
             x, y, w, h = det['x'], det['y'], det['w'], det['h']
             severity = det['severity']
             confidence = det['confidence']
             
             color = SeverityEstimator.get_severity_color(severity)
-            
-            # Draw bounding box
-
-
-            
             cv2.rectangle(annotated, (x, y), (x+w, y+h), color, 2)
             
             # Draw label
@@ -326,20 +294,20 @@ class VideoStream:
         """Run detection pipeline on video source"""
         logger.info(f"Starting detection on source: {source}")
         
-        # Open video source using threaded capture to reduce latency
+        # Open video source
         vs = VideoStream(source).start()
         if not vs.cap.isOpened():
             logger.error(f"Failed to open video source: {source}")
             return
 
-        # Get video properties from underlying capture
+        # Get video properties
         frame_width = int(vs.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         frame_height = int(vs.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         fps = int(vs.cap.get(cv2.CAP_PROP_FPS)) or 20
         
         logger.info(f"Video: {frame_width}x{frame_height} @ {fps} FPS")
         
-        # Setup video writer if output requested
+        # Setup video writer
         writer = None
         if output_video and config.SAVE_DETECTIONS:
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -349,7 +317,6 @@ class VideoStream:
             while True:
                 frame = vs.read()
                 if frame is None:
-                    # No frame yet (stream warming) or end of stream
                     time.sleep(0.005)
                     continue
                 
@@ -361,40 +328,42 @@ class VideoStream:
                     for det in detections:
                         img_path = save_image(annotated_frame, config.DETECTIONS_DIR, "pothole")
 
-                        # Prefer GPS coordinates when available, else use cached or IP fallback
-                        chosen_lat = None
-                        chosen_lon = None
+                        # Priority: Flight Controller (Drone) GPS -> Local GPS Module -> IP Fallback
+                        chosen_lat, chosen_lon = None, None
                         gps_meta = {}
 
-                        if self.gps:
+                        # 1. Try Flight Controller (user's only GPS)
+                        if self.drone:
+                            telemetry = self.drone.get_telemetry()
+                            # Ensure we have a valid coordinate (not 0.0)
+                            if telemetry and 'latitude' in telemetry and abs(telemetry['latitude']) > 1:
+                                chosen_lat, chosen_lon = telemetry['latitude'], telemetry['longitude']
+                                gps_meta = {
+                                    'gps_timestamp': telemetry.get('timestamp', datetime.now()).isoformat(),
+                                    'gps_quality': 2,
+                                    'altitude': telemetry.get('altitude', 0),
+                                    'heading': telemetry.get('heading', 0),
+                                    'location_source': 'flight_controller'
+                                }
+                                logger.debug(f"Location from Flight Controller: {chosen_lat}, {chosen_lon}")
+
+                        # 2. Try Local GPS module if FC not available
+                        if chosen_lat is None and self.gps:
                             gps_lat, gps_lon, gps_ts, gps_quality = self.gps.get_coordinates()
                             if gps_lat is not None and gps_quality >= config.GPS_MIN_QUALITY:
                                 chosen_lat, chosen_lon = gps_lat, gps_lon
                                 gps_meta = {
-                                    'gps_timestamp': gps_ts,
-                                    'gps_quality': gps_quality
+                                    'gps_timestamp': gps_ts, 
+                                    'gps_quality': gps_quality,
+                                    'location_source': 'local_gps_module'
                                 }
-                                logger.info(f"GPS Fix: ({gps_lat:.6f}, {gps_lon:.6f}) Quality={gps_quality}")
-                            elif config.GPS_USE_CACHED_IF_NO_FIX:
-                                cached_lat, cached_lon, cached_ts = self.gps.get_cached_coordinates()
-                                if cached_lat is not None:
-                                    chosen_lat, chosen_lon = cached_lat, cached_lon
-                                    gps_meta = {
-                                        'gps_timestamp': cached_ts,
-                                        'gps_quality': 0
-                                    }
-                                    logger.debug(f"Using cached GPS: ({cached_lat:.6f}, {cached_lon:.6f})")
-                                else:
-                                    logger.debug("No cached GPS available")
-                            else:
-                                logger.debug("GPS present but no valid fix")
+                                logger.debug(f"Location from Local GPS Module: {chosen_lat}, {chosen_lon}")
 
-                        # Fallback to IP geolocation if allowed and no GPS coords
-                        if (chosen_lat is None or chosen_lon is None) and config.GPS_FALLBACK_TO_IP:
-                            ip_lat, ip_lon = get_geolocation()
-                            if ip_lat and ip_lon:
-                                chosen_lat, chosen_lon = ip_lat, ip_lon
-                                logger.info(f"Using IP geolocation: ({ip_lat}, {ip_lon})")
+                        # 3. Fallback to IP geolocation
+                        if chosen_lat is None and config.FALLBACK_GEOLOCATION:
+                            chosen_lat, chosen_lon = get_geolocation()
+                            gps_meta = {'location_source': 'ip_geolocation'}
+                            logger.debug(f"Location from IP Fallback: {chosen_lat}, {chosen_lon}")
 
                         payload = create_detection_payload(
                             {
@@ -403,16 +372,15 @@ class VideoStream:
                                 'confidence': det['confidence'],
                                 'image_path': img_path,
                             },
-                            chosen_lat, chosen_lon
+                            chosen_lat or 0.0, chosen_lon or 0.0
                         )
 
-                        # Inject any GPS metadata into payload before sending
                         if gps_meta:
                             payload.update(gps_meta)
 
-                        logger.info(f"Detection: {payload}")
+                        logger.info(f"Pothole detected at ({chosen_lat}, {chosen_lon}) - Severity: {det['severity']}")
 
-                        # Send to cloud (if enabled)
+                        # Send to ground station / database API
                         if config.ENABLE_CLOUD_UPLOAD:
                             self._send_to_api(payload)
                 
@@ -420,49 +388,79 @@ class VideoStream:
                 if writer:
                     writer.write(annotated_frame)
                 
-                # Display frame
+                # Display result
                 cv2.imshow("ASTROPATH Detection", annotated_frame)
                 
-                # Break on 'q'
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
         
         finally:
-            try:
-                vs.stop()
-            except Exception:
-                pass
+            vs.stop()
             if writer:
                 writer.release()
             cv2.destroyAllWindows()
-            logger.info(f"Detection complete. Total frames: {self.frame_count}, Detections: {self.detection_count}")
-
-            # Close GPS connection
             if self.gps:
-                try:
-                    diag = self.gps.get_diagnostics()
-                    logger.info(f"GPS Statistics: {diag}")
-                    self.gps.close()
-                except Exception as e:
-                    logger.error(f"Error closing GPS: {e}")
-    
+                self.gps.close()
+
     def _send_to_api(self, payload):
-        """Send detection payload to cloud API"""
+        """Send detection payload to ground station database/API"""
         try:
             import requests
             response = requests.post(config.API_URL, json=payload, timeout=config.API_TIMEOUT)
-            if response.status_code == 200:
-                logger.info(f"API response: {response.status_code}")
+            if response.status_code == 200 or response.status_code == 201:
+                logger.info("✓ Detection data synced to ground database")
             else:
-                logger.warning(f"API error: {response.status_code}")
+                logger.warning(f"Failed to sync with ground API: {response.status_code}")
         except Exception as e:
-            logger.error(f"API connection failed: {e}")
+            logger.error(f"Sync connection failed: {e}")
+
+
+class VideoStream:
+    """Simple threaded video capture to reduce frame latency."""
+    def __init__(self, src=0):
+        self.src = src
+        self.cap = cv2.VideoCapture(src)
+        self.stopped = False
+        self.frame = None
+        self.lock = threading.Lock()
+        self.thread = None
+
+    def start(self):
+        if self.thread is None:
+            self.thread = threading.Thread(target=self.update, daemon=True)
+            self.thread.start()
+        return self
+
+    def update(self):
+        while not self.stopped:
+            try:
+                ret, frame = self.cap.read()
+            except Exception:
+                ret, frame = False, None
+
+            if not ret or frame is None:
+                time.sleep(0.01)
+                continue
+
+            with self.lock:
+                self.frame = frame
+
+    def read(self):
+        with self.lock:
+            return self.frame.copy() if self.frame is not None else None
+
+    def stop(self):
+        self.stopped = True
+        if self.thread:
+            self.thread.join(timeout=0.5)
+        if self.cap and self.cap.isOpened():
+            self.cap.release()
 
 
 def main():
     """Main detection entry point"""
     logger.info("="*60)
-    logger.info("ASTROPATH Edge Detection")
+    logger.info("ASTROPATH - Drone/Edge Detection System")
     logger.info("="*60)
     
     # Initialize pipeline
@@ -470,20 +468,6 @@ def main():
     
     # Determine source
     source = config.CAMERA_SOURCE
-    if isinstance(source, int) and source == 0:
-        # Webcam
-        logger.info("Using webcam")
-    elif isinstance(source, str):
-        # Check if file or URL
-        if source.startswith(('http', 'udp', 'rtsp')):
-            logger.info(f"Using stream: {source}")
-        else:
-            # File
-            if os.path.exists(source):
-                logger.info(f"Using video file: {source}")
-            else:
-                logger.warning(f"File not found: {source}")
-                return
     
     # Run detection
     pipeline.run(source, output_video=config.VIDEO_OUTPUT_PATH)

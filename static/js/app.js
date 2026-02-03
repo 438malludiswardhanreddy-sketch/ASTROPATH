@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStats();
     updateLocation();
     loadRecentDetections();
-    
+
     // Set up event listeners
     document.getElementById('toggle-detection')?.addEventListener('click', toggleDetection);
     document.getElementById('camera-source')?.addEventListener('change', changeCamera);
     document.getElementById('upload-form')?.addEventListener('submit', handleUpload);
     document.getElementById('pothole-image')?.addEventListener('change', previewImage);
-    
+
     // Update stats every 5 seconds
     setInterval(updateStats, 5000);
     setInterval(loadRecentDetections, 10000);
@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize application
 async function initializeApp() {
     console.log('🚀 ASTROPATH Application initialized');
-    
+
     // Check system health
     try {
         const response = await fetch('/health');
         const health = await response.json();
-        
-        document.getElementById('system-status').textContent = 
+
+        document.getElementById('system-status').textContent =
             health.status === 'healthy' ? 'Active' : 'Offline';
-        
+
         if (health.gps_connected) {
             document.getElementById('gps-status').textContent = 'Connected';
         } else if (health.gps_enabled) {
@@ -50,7 +50,7 @@ async function updateStats() {
     try {
         const response = await fetch('/api/stats');
         const data = await response.json();
-        
+
         if (data.success) {
             const stats = data.stats;
             document.getElementById('total-detections').textContent = stats.total || 0;
@@ -65,17 +65,17 @@ async function updateLocation() {
     try {
         const response = await fetch('/api/location');
         const data = await response.json();
-        
+
         if (data.success) {
             currentLocation = {
                 latitude: data.latitude,
                 longitude: data.longitude,
                 source: data.source
             };
-            
+
             const locationText = `${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)}`;
             document.getElementById('current-location').textContent = locationText;
-            
+
             // Update upload modal location if exists
             const uploadLocation = document.getElementById('upload-location');
             if (uploadLocation) {
@@ -93,31 +93,29 @@ function toggleDetection() {
     const button = document.getElementById('toggle-detection');
     const videoFeed = document.getElementById('video-feed');
     const cameraSource = document.getElementById('camera-source').value;
-    
+
     if (!detectionActive) {
         // Start detection
         detectionActive = true;
         button.innerHTML = '<i class="fas fa-stop"></i> Stop Detection';
-        button.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)';
-        
+
         // Start video feed
         videoFeed.src = `/video_feed?source=${cameraSource}&t=${Date.now()}`;
-        
+
         // Notify backend
         fetch('/api/start_detection', { method: 'POST' })
             .then(response => response.json())
             .then(data => console.log('Detection started:', data))
             .catch(error => console.error('Failed to start detection:', error));
-            
+
     } else {
         // Stop detection
         detectionActive = false;
         button.innerHTML = '<i class="fas fa-play"></i> Start Detection';
-        button.style.background = '';
-        
+
         // Stop video feed
         videoFeed.src = '';
-        
+
         // Notify backend
         fetch('/api/stop_detection', { method: 'POST' })
             .then(response => response.json())
@@ -140,10 +138,10 @@ async function loadRecentDetections() {
     try {
         const response = await fetch('/api/detections?limit=10');
         const data = await response.json();
-        
+
         if (data.success && data.detections.length > 0) {
             const container = document.getElementById('detections-list');
-            
+
             container.innerHTML = data.detections.map(det => `
                 <div class="detection-item">
                     <span class="severity-badge severity-${det.severity.toLowerCase()}">
@@ -186,8 +184,8 @@ function previewImage(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('image-preview').innerHTML = 
+        reader.onload = function (e) {
+            document.getElementById('image-preview').innerHTML =
                 `<img src="${e.target.result}" alt="Preview">`;
         };
         reader.readAsDataURL(file);
@@ -197,21 +195,21 @@ function previewImage(event) {
 // Handle upload form submission
 async function handleUpload(event) {
     event.preventDefault();
-    
+
     const fileInput = document.getElementById('pothole-image');
     const severity = document.getElementById('severity').value;
     const description = document.getElementById('description').value;
-    
+
     if (!fileInput.files[0]) {
         showNotification('Please select an image', 'error');
         return;
     }
-    
+
     // Read image as base64
     const reader = new FileReader();
-    reader.onload = async function(e) {
+    reader.onload = async function (e) {
         const imageData = e.target.result;
-        
+
         try {
             const response = await fetch('/api/upload', {
                 method: 'POST',
@@ -226,9 +224,9 @@ async function handleUpload(event) {
                     longitude: currentLocation?.longitude
                 })
             });
-            
+
             const data = await response.json();
-            
+
             if (data.success) {
                 showNotification('Report submitted successfully!', 'success');
                 closeUploadModal();
@@ -241,7 +239,7 @@ async function handleUpload(event) {
             showNotification('Network error. Please try again.', 'error');
         }
     };
-    
+
     reader.readAsDataURL(fileInput.files[0]);
 }
 
@@ -263,9 +261,9 @@ function showNotification(message, type = 'info') {
         animation: slideIn 0.3s ease;
     `;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';

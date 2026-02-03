@@ -137,8 +137,8 @@ DRONE_MAX_ALTITUDE = 120     # Maximum legal altitude (meters)
 
 # Telemetry Source
 # Options: 'mavlink', 'manual', 'simulation'
-DRONE_TELEMETRY_SOURCE = 'simulation'  # Use 'mavlink' for real drone
-DRONE_MAVLINK_CONNECTION = 'udp:127.0.0.1:14550'  # MAVLink connection string
+DRONE_TELEMETRY_SOURCE = 'mavlink'  # Use 'mavlink' for real drone
+DRONE_MAVLINK_CONNECTION = 'udp:127.0.0.1:14550'  # MAVLink connection string (e.g., 'udp:127.0.0.1:14550' for WiFi or '/dev/ttyAMA0' for Serial)
 
 # Detection Settings for Drone
 DRONE_DETECTION_MIN_AREA = 0.0005  # Minimum pothole area ratio (smaller from altitude)

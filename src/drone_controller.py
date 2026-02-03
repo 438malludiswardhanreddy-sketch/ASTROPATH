@@ -123,43 +123,60 @@ class DroneController:
             from pymavlink import mavutil
             
             # Connect to MAVLink (if not already connected)
-            if not hasattr(self, 'mav_connection'):
+            if not hasattr(self, 'mav_connection') or self.mav_connection is None:
+                logger.info(f"Connecting to MAVLink at {config.DRONE_MAVLINK_CONNECTION}...")
                 self.mav_connection = mavutil.mavlink_connection(
                     config.DRONE_MAVLINK_CONNECTION
                 )
-                logger.info("Connected to MAVLink")
+                
+                # Wait for heartbeat
+                logger.info("Waiting for MAVLink heartbeat...")
+                self.mav_connection.wait_heartbeat(timeout=5)
+                logger.info("✓ MAVLink Heartbeat received")
+                
+                # Request data stream (once per connection)
+                self.mav_connection.mav.request_data_stream_send(
+                    self.mav_connection.target_system,
+                    self.mav_connection.target_component,
+                    mavutil.mavlink.MAV_DATA_STREAM_ALL,
+                    10, 1 # 10 Hz
+                )
             
-            # Request data stream
-            self.mav_connection.mav.request_data_stream_send(
-                self.mav_connection.target_system,
-                self.mav_connection.target_component,
-                mavutil.mavlink.MAV_DATA_STREAM_ALL,
-                1, 1
-            )
-            
-            # Get latest position
-            msg = self.mav_connection.recv_match(
-                type='GLOBAL_POSITION_INT',
-                blocking=False
-            )
-            
-            if msg:
-                self.telemetry = {
-                    'latitude': msg.lat / 1e7,
-                    'longitude': msg.lon / 1e7,
-                    'altitude': msg.relative_alt / 1000.0,
-                    'heading': msg.hdg / 100.0,
-                    'speed': math.sqrt(msg.vx**2 + msg.vy**2) / 100.0,
-                    'timestamp': datetime.now()
-                }
+            # Flush existing messages to get the latest one
+            # Note: recv_match(blocking=False) only gets the next message in queue
+            # We want the MOST RECENT one for real-time tracking
+            last_msg = None
+            while True:
+                msg = self.mav_connection.recv_match(
+                    type=['GLOBAL_POSITION_INT', 'ATTITUDE'],
+                    blocking=False
+                )
+                if msg is None:
+                    break
+                
+                if msg.get_type() == 'GLOBAL_POSITION_INT':
+                    self.telemetry['latitude'] = msg.lat / 1e7
+                    self.telemetry['longitude'] = msg.lon / 1e7
+                    self.telemetry['altitude'] = msg.relative_alt / 1000.0
+                    self.telemetry['heading'] = msg.hdg / 100.0
+                    self.telemetry['speed'] = math.sqrt(msg.vx**2 + msg.vy**2) / 100.0
+                    self.telemetry['timestamp'] = datetime.now()
+                elif msg.get_type() == 'ATTITUDE':
+                    # Optional: get roll, pitch, yaw for better projection
+                    self.telemetry['pitch'] = math.degrees(msg.pitch)
+                    self.telemetry['roll'] = math.degrees(msg.roll)
+                    self.telemetry['yaw'] = math.degrees(msg.yaw)
             
             return self.telemetry
             
         except ImportError:
-            logger.warning("pymavlink not installed, using simulation")
+            logger.warning("pymavlink not installed. Install with: pip install pymavlink")
             return self._get_simulated_telemetry()
         except Exception as e:
             logger.error(f"MAVLink error: {e}")
+            # Reset connection on error
+            if hasattr(self, 'mav_connection'):
+                self.mav_connection = None
             return self.telemetry
     
     def _get_simulated_telemetry(self):

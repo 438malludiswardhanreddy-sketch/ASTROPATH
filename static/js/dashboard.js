@@ -1,13 +1,10 @@
-// ASTROPATH - Dashboard JavaScript with Map Integration
-let map;
-let markersLayer;
-let heatmapLayer;
-let showHeatmap = false;
 let allDetections = [];
+let detectionsChart;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     initializeMap();
+    initializeChart();
     loadDetections();
     updateDashboardStats();
 
@@ -44,13 +41,14 @@ function initializeMap() {
 // Load detections from API
 async function loadDetections() {
     try {
-        const response = await fetch('/api/detections?limit=500');
+        const response = await fetch('/api/detections?limit=1000');
         const data = await response.json();
 
         if (data.success) {
             allDetections = data.detections;
             displayDetections(allDetections);
             updateDetectionsList(allDetections);
+            updateChart(allDetections);
         }
     } catch (error) {
         console.error('Failed to load detections:', error);
@@ -87,12 +85,13 @@ function displayMarkers(detections) {
         const color = getSeverityColor(detection.severity);
 
         const marker = L.circleMarker([detection.latitude, detection.longitude], {
-            radius: 8,
+            radius: 10,
             fillColor: color,
             color: '#fff',
-            weight: 2,
+            weight: 3,
             opacity: 1,
-            fillOpacity: 0.8
+            fillOpacity: 0.9,
+            className: 'marker-pulse'
         });
 
         // Create popup
@@ -323,6 +322,108 @@ async function updateStatus(id, status) {
     } catch (error) {
         console.error("Error updating status:", error);
     }
+}
+
+// Initialize Chart.js
+function initializeChart() {
+    const ctx = document.getElementById('detectionsChart').getContext('2d');
+
+    detectionsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Detections',
+                data: [],
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#6366f1',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleColor: '#fff',
+                    bodyColor: '#94a3b8',
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function (context) {
+                            return `Detections: ${context.parsed.y}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        color: '#94a3b8',
+                        stepSize: 1
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#94a3b8',
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Update chart with detection data
+function updateChart(detections) {
+    if (!detectionsChart) return;
+
+    // Group detections by hour for the last 24 hours
+    const now = new Date();
+    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const hourlyData = {};
+    for (let i = 0; i < 24; i++) {
+        const d = new Date(now.getTime() - i * 60 * 60 * 1000);
+        const label = d.getHours() + ':00';
+        hourlyData[label] = 0;
+    }
+
+    detections.forEach(det => {
+        const detDate = new Date(det.timestamp);
+        if (detDate > last24h) {
+            const label = detDate.getHours() + ':00';
+            if (hourlyData.hasOwnProperty(label)) {
+                hourlyData[label]++;
+            }
+        }
+    });
+
+    const labels = Object.keys(hourlyData).reverse();
+    const data = labels.map(l => hourlyData[l]);
+
+    detectionsChart.data.labels = labels;
+    detectionsChart.data.datasets[0].data = data;
+    detectionsChart.update();
 }
 
 // Export functions

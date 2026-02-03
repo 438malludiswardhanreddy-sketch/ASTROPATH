@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Header -->
@@ -16,17 +18,22 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-road"></i>
-                    <h1>ASTROPATH</h1>
+                    <div>
+                        <h1>ASTROPATH</h1>
+                        <span
+                            style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--primary-color);">Smart
+                            Road Intelligence</span>
+                    </div>
                 </div>
                 <nav class="nav">
                     <a href="/" class="nav-link active">
-                        <i class="fas fa-video"></i> Live Detection
+                        <i class="fas fa-video"></i> Live Feed
                     </a>
                     <a href="/dashboard" class="nav-link">
-                        <i class="fas fa-map-marked-alt"></i> Dashboard
+                        <i class="fas fa-chart-pie"></i> Analytics
                     </a>
                     <a href="#upload" class="nav-link" onclick="showUploadModal()">
-                        <i class="fas fa-cloud-upload-alt"></i> Report
+                        <i class="fas fa-plus-circle"></i> New Report
                     </a>
                 </nav>
             </div>
@@ -34,11 +41,11 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Info Cards -->
+            <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <i class="fas fa-exclamation-triangle"></i>
+                    <div class="stat-icon" style="background: var(--gradient-1);">
+                        <i class="fas fa-shield-virus"></i>
                     </div>
                     <div class="stat-info">
                         <h3 id="total-detections">0</h3>
@@ -47,32 +54,32 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-icon" style="background: var(--gradient-3);">
                         <i class="fas fa-satellite"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="gps-status">Checking...</h3>
-                        <p>GPS Status</p>
+                        <h3 id="gps-status" style="font-size: 1.5rem;">Init...</h3>
+                        <p>GPS Connectivity</p>
                     </div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        <i class="fas fa-map-marker-alt"></i>
+                    <div class="stat-icon" style="background: var(--gradient-2);">
+                        <i class="fas fa-location-arrow"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="current-location">Loading...</h3>
-                        <p>Current Location</p>
+                        <h3 id="current-location" style="font-size: 1rem;">Tracking...</h3>
+                        <p>Current Node</p>
                     </div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                        <i class="fas fa-heartbeat"></i>
+                    <div class="stat-icon" style="background: var(--success-color);">
+                        <i class="fas fa-wave-square"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="system-status">Active</h3>
-                        <p>System Status</p>
+                        <h3 id="system-status">Stable</h3>
+                        <p>System Engine</p>
                     </div>
                 </div>
             </div>
@@ -80,16 +87,16 @@
             <!-- Video Feed Section -->
             <div class="detection-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-video"></i> Live Camera Feed</h2>
+                    <h2><i class="fas fa-video"></i> Intelligence Stream</h2>
                     <div class="controls">
                         <select id="camera-source" class="control-select">
-                            <option value="0">Default Webcam</option>
-                            <option value="1">External Camera</option>
-                            <option value="esp32">ESP32-CAM</option>
-                            <option value="phone">Phone Camera</option>
+                            <option value="0">Local Optics</option>
+                            <option value="1">Auxiliary Unit</option>
+                            <option value="esp32">ESP-Module</option>
+                            <option value="phone">Remote Mobile</option>
                         </select>
                         <button id="toggle-detection" class="btn btn-primary">
-                            <i class="fas fa-play"></i> Start Detection
+                            <i class="fas fa-play"></i> Initialize Core
                         </button>
                     </div>
                 </div>
@@ -98,29 +105,28 @@
                     <img id="video-feed" src="" alt="Video Feed" class="video-stream">
                     <div class="video-overlay">
                         <div class="detection-badge">
-                            <i class="fas fa-circle pulse"></i> LIVE
+                            <i class="fas fa-dot-circle pulse"></i> STREAMING
                         </div>
                     </div>
                 </div>
 
                 <!-- Detection Instructions -->
                 <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> How to Use:</h3>
+                    <h3><i class="fas fa-terminal"></i> Operational Protocol:</h3>
                     <ol>
-                        <li>Select your camera source from the dropdown</li>
-                        <li>Click "Start Detection" to begin monitoring</li>
-                        <li>The system will automatically detect and track potholes</li>
-                        <li>All detections are saved with GPS coordinates</li>
-                        <li>View all detections on the Dashboard</li>
+                        <li>Calibrate optics via the source selector</li>
+                        <li>Initialize detection core to begin real-time analysis</li>
+                        <li>System architecture will autonomously log anomalies with geo-tags</li>
+                        <li>Review neural insights in the Analytics Dashboard</li>
                     </ol>
                 </div>
             </div>
 
             <!-- Recent Detections -->
             <div class="recent-detections">
-                <h2><i class="fas fa-history"></i> Recent Detections</h2>
+                <h2><i class="fas fa-stream"></i> Event Log</h2>
                 <div id="detections-list" class="detections-list">
-                    <p class="no-data">No recent detections. Start detection to begin monitoring.</p>
+                    <p class="no-data">Awaiting sensor data...</p>
                 </div>
             </div>
         </main>
@@ -187,4 +193,5 @@
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
+
 </html>

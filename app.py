@@ -488,6 +488,35 @@ def upload_detection():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/report', methods=['POST'])
+def report_pothole_api():
+    """Endpoint for automated detections from drone/edge devices"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
+
+        # Map 'class' from payload to 'class_name' for database
+        if 'class' in data and 'class_name' not in data:
+            data['class_name'] = data['class']
+
+        # Add to database
+        detection_id = db.add_detection(data)
+        
+        if detection_id != -1:
+            return jsonify({
+                'success': True, 
+                'detection_id': detection_id,
+                'message': 'Detection synced to ground database'
+            }), 201
+        else:
+            return jsonify({'success': False, 'error': 'Database insertion failed'}), 500
+
+    except Exception as e:
+        logger.error(f"Report API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/start_detection', methods=['POST'])
 def start_detection():
     """Start detection service"""
