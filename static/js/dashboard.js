@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('toggle-heatmap')?.addEventListener('click', toggleHeatmap);
     document.getElementById('refresh-map')?.addEventListener('click', loadDetections);
     document.getElementById('filter-severity')?.addEventListener('change', filterDetections);
+    document.getElementById('filter-status')?.addEventListener('change', filterDetections);
 
     // Auto-refresh every 30 seconds
     setInterval(loadDetections, 30000);
@@ -157,18 +158,23 @@ function toggleHeatmap() {
     displayDetections(allDetections);
 }
 
-// Filter detections by severity
+// Filter detections by severity and status
 function filterDetections() {
     const severity = document.getElementById('filter-severity').value;
+    const status = document.getElementById('filter-status').value;
 
-    if (severity === 'all') {
-        displayDetections(allDetections);
-        updateDetectionsList(allDetections);
-    } else {
-        const filtered = allDetections.filter(d => d.severity === severity);
-        displayDetections(filtered);
-        updateDetectionsList(filtered);
+    let filtered = allDetections;
+
+    if (severity !== 'all') {
+        filtered = filtered.filter(d => d.severity === severity);
     }
+
+    if (status !== 'all') {
+        filtered = filtered.filter(d => d.repair_status === status);
+    }
+
+    displayDetections(filtered);
+    updateDetectionsList(filtered);
 }
 
 // Update detections list/table
@@ -181,18 +187,15 @@ function updateDetectionsList(detections) {
     }
 
     container.innerHTML = detections.map(det => `
-        <div class="detection-item" onclick="focusOnDetection(${det.latitude}, ${det.longitude})">
-            <span class="severity-badge severity-${det.severity.toLowerCase()}">
-                ${det.severity}
-            </span>
-            <div>
-                <strong>${new Date(det.timestamp).toLocaleString()}</strong>
-                <p style="color: var(--text-secondary); font-size: 0.85rem;">
-                    ${det.latitude.toFixed(4)}, ${det.longitude.toFixed(4)}
-                </p>
-                <p style="color: var(--text-secondary); font-size: 0.85rem;">
-                    ${det.source} | ${(det.confidence * 100).toFixed(1)}% confidence
-                </p>
+        <div class="detection-card severity-${det.severity.toLowerCase()}" onclick="openDetailPanel(${det.id})">
+            <div class="card-header">
+                <span class="badge severity-${det.severity.toLowerCase()}">${det.severity}</span>
+                <span class="status-indicator status-${det.repair_status || 'pending'}"></span>
+            </div>
+            <div class="card-body">
+                <strong>${new Date(det.timestamp).toLocaleTimeString()}</strong>
+                <p>${det.latitude.toFixed(4)}, ${det.longitude.toFixed(4)}</p>
+                <p class="source">${det.source} | ${(det.confidence * 100).toFixed(0)}%</p>
             </div>
         </div>
     `).join('');
@@ -200,9 +203,10 @@ function updateDetectionsList(detections) {
 
 // Focus map on specific detection
 function focusOnDetection(lat, lon) {
+    if (!map) return;
     map.setView([lat, lon], 16);
 
-    // Find and open popup for this marker
+    // Find and open popup for this marker if any
     markersLayer.eachLayer(layer => {
         const latlng = layer.getLatLng();
         if (Math.abs(latlng.lat - lat) < 0.0001 && Math.abs(latlng.lng - lon) < 0.0001) {
@@ -219,11 +223,9 @@ async function updateDashboardStats() {
 
         if (data.success) {
             const stats = data.stats;
-
-            document.getElementById('total-count').textContent = stats.total || 0;
+            document.getElementById('total-count').textContent = stats.total_detections || 0;
             document.getElementById('high-severity').textContent = stats.high_severity || 0;
-            document.getElementById('today-count').textContent = stats.today || 0;
-            document.getElementById('resolved-count').textContent = stats.resolved || 0;
+            document.getElementById('resolved-count').textContent = stats.repairs_completed || 0;
         }
     } catch (error) {
         console.error('Failed to update stats:', error);
@@ -233,16 +235,98 @@ async function updateDashboardStats() {
 // Get severity color
 function getSeverityColor(severity) {
     switch (severity) {
-        case 'High':
-            return '#ff0000';
-        case 'Medium':
-            return '#ffa500';
-        case 'Low':
-            return '#00ff00';
-        default:
-            return '#888888';
+        case 'High': return '#ef4444'; // Red 500
+        case 'Medium': return '#f59e0b'; // Amber 500
+        case 'Low': return '#10b981'; // Emerald 500
+        default: return '#64748b'; // Slate 500
     }
 }
 
-// Export functions for global access
+// Open detail panel for a detection
+function openDetailPanel(id) {
+    const det = allDetections.find(d => d.id === id);
+    if (!det) return;
+
+    // Focus on map
+    focusOnDetection(det.latitude, det.longitude);
+
+    const panel = document.getElementById('detail-panel');
+    const content = document.getElementById('detail-content');
+
+    panel.classList.add('active');
+
+    content.innerHTML = `
+        <div class="detail-image">
+            ${det.image_path ? `<img src="/${det.image_path}" alt="Pothole">` : '<div class="no-image"><i class="fas fa-image"></i> No image available</div>'}
+        </div>
+        <div class="detail-info">
+            <div class="info-row">
+                <span class="label">Time</span>
+                <span class="value">${new Date(det.timestamp).toLocaleString()}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Coordinates</span>
+                <span class="value">${det.latitude.toFixed(6)}, ${det.longitude.toFixed(6)}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Severity</span>
+                <span class="value severity-${det.severity.toLowerCase()}">${det.severity}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Source</span>
+                <span class="value">${det.source}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Status</span>
+                <span class="value status-text-${det.repair_status || 'pending'}">${(det.repair_status || 'pending').replace('_', ' ')}</span>
+            </div>
+        </div>
+        
+        <div class="detail-actions">
+            <h4>Update Status</h4>
+            <div class="action-buttons">
+                <button class="btn btn-warning btn-sm" onclick="updateStatus(${det.id}, 'pending')">Pending</button>
+                <button class="btn btn-info btn-sm" onclick="updateStatus(${det.id}, 'in_progress')">Investigating</button>
+                <button class="btn btn-success btn-sm" onclick="updateStatus(${det.id}, 'completed')">Resolved</button>
+            </div>
+            <textarea id="status-notes" placeholder="Add notes here...">${det.notes || ''}</textarea>
+        </div>
+    `;
+}
+
+// Close detail panel
+function closeDetailPanel() {
+    document.getElementById('detail-panel').classList.remove('active');
+}
+
+// Update detection status via API
+async function updateStatus(id, status) {
+    const notes = document.getElementById('status-notes')?.value || "";
+
+    try {
+        const response = await fetch(`/api/detections/${id}/status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status, notes })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            // Reload data
+            await loadDetections();
+            await updateDashboardStats();
+            // Refresh details
+            openDetailPanel(id);
+        } else {
+            alert("Failed to update status: " + data.error);
+        }
+    } catch (error) {
+        console.error("Error updating status:", error);
+    }
+}
+
+// Export functions
 window.focusOnDetection = focusOnDetection;
+window.openDetailPanel = openDetailPanel;
+window.closeDetailPanel = closeDetailPanel;
+window.updateStatus = updateStatus;

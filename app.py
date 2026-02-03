@@ -95,17 +95,30 @@ def initialize_gps():
 
 
 def get_location():
-    """Get current location from GPS or fallback to IP geolocation"""
+    """Get current location from GPS, Drone, or fallback to IP geolocation"""
     lat, lon = None, None
     source = "unknown"
     
-    # Try GPS first if available
+    # 1. Try Drone Telemetry (User has only one GPS on drone)
+    try:
+        if hasattr(generate_frames, "drone_detector") and generate_frames.drone_detector.drone:
+            telemetry = generate_frames.drone_detector.drone.get_telemetry()
+            if telemetry and 'latitude' in telemetry:
+                lat = telemetry['latitude']
+                lon = telemetry['longitude']
+                source = "drone_gps"
+                logger.info(f"Location from Drone GPS: {lat}, {lon}")
+                return lat, lon, source
+    except Exception as e:
+        logger.error(f"Drone telemetry read error: {e}")
+    
+    # 2. Try Local GPS first if available
     if gps_handler and gps_handler.is_connected():
         try:
             lat, lon, timestamp, quality = gps_handler.get_coordinates()
             if lat and lon:
                 source = "gps"
-                logger.info(f"Location from GPS: {lat}, {lon}")
+                logger.info(f"Location from Local GPS: {lat}, {lon}")
                 return lat, lon, source
         except Exception as e:
             logger.error(f"GPS read error: {e}")
@@ -393,6 +406,28 @@ def get_current_location():
             'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/detections/<int:detection_id>/status', methods=['POST'])
+def update_detection_status(detection_id):
+    """Update repair status of a detection"""
+    try:
+        data = request.get_json()
+        status = data.get('status')
+        notes = data.get('notes', '')
+        
+        if not status:
+            return jsonify({'success': False, 'error': 'Status is required'}), 400
+            
+        success = db.update_repair_status(detection_id, status, notes)
+        
+        return jsonify({
+            'success': success,
+            'message': f'Status updated to {status}' if success else 'Failed to update status'
+        })
+    except Exception as e:
+        logger.error(f"Update status error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 

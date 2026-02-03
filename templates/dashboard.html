@@ -39,85 +39,12 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Statistics -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="total-count">0</h3>
-                        <p>Total Detections</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="high-severity">0</h3>
-                        <p>High Severity</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="today-count">0</h3>
-                        <p>Detected Today</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="resolved-count">0</h3>
-                        <p>Resolved</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Map and Filters -->
-            <div class="dashboard-grid">
-                <!-- Map Section -->
-                <div class="map-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-map-marked-alt"></i> Detection Map</h2>
-                        <div class="map-controls">
-                            <button id="toggle-heatmap" class="btn btn-small">
-                                <i class="fas fa-fire"></i> Heatmap
-                            </button>
-                            <button id="refresh-map" class="btn btn-small">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                        </div>
-                    </div>
-                    <div id="map" class="map-container"></div>
-                    <div class="map-legend">
-                        <div class="legend-item">
-                            <span class="legend-marker" style="background-color: #00ff00;"></span>
-                            <span>Low Severity</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-marker" style="background-color: #ffa500;"></span>
-                            <span>Medium Severity</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-marker" style="background-color: #ff0000;"></span>
-                            <span>High Severity</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detections List -->
-                <div class="list-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-list"></i> Detections</h2>
+            <!-- Sidebar for Filters and Stats -->
+            <div class="dashboard-sidebar">
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-filter"></i> Filters</h3>
+                    <div class="filter-group">
+                        <label>Severity</label>
                         <select id="filter-severity" class="control-select">
                             <option value="all">All Severities</option>
                             <option value="High">High</option>
@@ -125,9 +52,69 @@
                             <option value="Low">Low</option>
                         </select>
                     </div>
-                    <div id="detections-table" class="detections-table">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="filter-status" class="control-select">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Resolved</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sidebar-card stats-summary">
+                    <h3><i class="fas fa-chart-pie"></i> Summary</h3>
+                    <div class="mini-stat">
+                        <span class="label">Total</span>
+                        <span class="value" id="total-count">0</span>
+                    </div>
+                    <div class="mini-stat urgent">
+                        <span class="label">High Severity</span>
+                        <span class="value" id="high-severity">0</span>
+                    </div>
+                    <div class="mini-stat success">
+                        <span class="label">Resolved</span>
+                        <span class="value" id="resolved-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Center (Map and List) -->
+            <div class="dashboard-center">
+                <div class="map-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-map-location-dot"></i> Real-time Map</h2>
+                        <div class="map-controls">
+                            <button id="toggle-heatmap" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-fire"></i> Heatmap
+                            </button>
+                            <button id="refresh-map" class="btn btn-primary btn-sm">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="map" class="map-container"></div>
+                </div>
+
+                <div class="list-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-list-check"></i> Recent Detections</h2>
+                    </div>
+                    <div id="detections-table" class="detections-grid">
                         <p class="no-data">Loading detections...</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Detail Panel (Conditionally visible) -->
+            <div id="detail-panel" class="detail-panel">
+                <div class="detail-header">
+                    <h3>Detection Details</h3>
+                    <button class="close-btn" onclick="closeDetailPanel()">&times;</button>
+                </div>
+                <div id="detail-content" class="detail-content">
+                    <p class="placeholder-text">Select a detection to view details</p>
                 </div>
             </div>
         </main>
