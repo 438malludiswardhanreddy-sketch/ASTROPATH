@@ -5,10 +5,12 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]()
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.8%2B-green)]()
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://astropath-0yd4.onrender.com)
 
 ---
 
 ### 📺 Live Demo
+**[Visit ASTROPATH Live](https://astropath-0yd4.onrender.com)**
 ![ASTROPATH Demo](https://via.placeholder.com/800x400.png?text=Place+Link+to+Your+App+GIF+or+Video+Here)
 *Dashboard: Real-time pothole mapping and severity analysis.*
 
@@ -82,7 +84,7 @@ graph TD
 ./start.sh
 ```
 
-**Then open:** http://localhost:5000
+**Access at:** [https://astropath-0yd4.onrender.com](https://astropath-0yd4.onrender.com) (or http://localhost:5000 locally)
 
 ---
 

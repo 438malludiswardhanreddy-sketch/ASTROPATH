@@ -37,7 +37,7 @@ That's it! The script will:
 4. ✅ Download YOLO model (optional)
 5. ✅ Start the application
 
-**Access at:** http://localhost:5000
+**Access at:** [https://astropath-0yd4.onrender.com](https://astropath-0yd4.onrender.com) (or http://localhost:5000 locally)
 
 ---
 
