@@ -31,7 +31,46 @@ Traditional road maintenance relies on manual inspections or reactive citizen co
 
 ---
 
-## 🚀 Quick Start (30 Seconds!)
+## �️ System Architecture
+
+```mermaid
+graph TD
+    A[Data Sources] --> B{Detection Engine}
+    A1[Drone Fleet - 4K Video] --> A
+    A2[Citizen App - Mobile Camera] --> A
+    A3[Ground Patrol - USB/Webcam] --> A
+    A4[Edge Connect - ESP32-CAM] --> A
+    
+    B --> C[AI Processing Layer]
+    C1[YOLOv4-tiny Detection] --> B
+    C2[MobileNet Classification] --> B
+    C3[GPS Projection - Drone Telemetry] --> B
+    
+    B --> D[(SQLite Ground DB)]
+    D --> E[Real-Time Dashboard]
+    E --> F[Heatmap Visualization]
+    E --> G[Repair Status Management]
+```
+
+---
+
+## 💻 Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Backend** | Python, Flask, Waitress (WSGI) |
+| **Frontend** | Vanilla JS, Leaflet.js (Maps), CSS3 (Dark Theme) |
+| **Computer Vision** | OpenCV, YOLOv4-tiny, MobileNetV2 |
+| **Drone Pipeline** | Pymavlink, DroneKit, RTSP/UDP Stream |
+| **Database** | SQLite3 |
+| **Edge/IoT** | ESP32-CAM, GPS NEO-6M |
+| **Deployment** | Docker, Render Blueprints |
+
+---
+
+## 🎯 Key Features
+
+## �🚀 Quick Start (30 Seconds!)
 
 ### Windows
 ```powershell

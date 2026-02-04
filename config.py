@@ -29,7 +29,8 @@ LEARNING_RATE = 0.001
 DATA_AUGMENTATION = True
 
 # ✅ INTEGRATION: Your existing pothole images location
-EXISTING_POTHOLE_IMAGES = os.path.join(os.path.dirname(BASE_DIR), "pothole-detection-main", "Image Annotation")
+# Can be overridden by environment variable or left as default relative path
+EXISTING_POTHOLE_IMAGES = os.getenv("EXISTING_IMAGES_PATH", os.path.join(os.path.dirname(BASE_DIR), "pothole-detection-main", "Image Annotation"))
 
 # Path to training dataset (folder structure: data/pothole/ and data/plain/)
 TRAINING_DATA_PATH = os.path.join(DATA_DIR, "training_images")
