@@ -565,12 +565,16 @@ if __name__ == '__main__':
     
     # Run Flask app
     logger.info(f"\n🌐 Starting server at http://{config.FLASK_HOST}:{config.FLASK_PORT}")
-    logger.info("📱 Access the dashboard from any device on your network")
-    logger.info("Press Ctrl+C to stop\n")
     
-    app.run(
-        host=config.FLASK_HOST,
-        port=config.FLASK_PORT,
-        debug=config.FLASK_DEBUG,
-        threaded=True
-    )
+    if config.FLASK_DEBUG:
+        logger.info("Running in DEBUG mode (Flask Development Server)")
+        app.run(
+            host=config.FLASK_HOST,
+            port=config.FLASK_PORT,
+            debug=config.FLASK_DEBUG,
+            threaded=True
+        )
+    else:
+        logger.info("Running in PRODUCTION mode (Waitress WSGI Server)")
+        from waitress import serve
+        serve(app, host=config.FLASK_HOST, port=config.FLASK_PORT)

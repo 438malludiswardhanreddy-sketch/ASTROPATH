@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: astropath
+    env: docker
+    plan: free # or starter
+    region: singapore # Choose closest region
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: GPS_ENABLED
+        value: "false"
+      - key: GPS_FALLBACK_TO_IP
+        value: "true"
+    disk:
+      name: astropath-data
+      mountPath: /app/detections
+      sizeGB: 1
