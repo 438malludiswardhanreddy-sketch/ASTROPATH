@@ -13,7 +13,3 @@ services:
         value: "false"
       - key: GPS_FALLBACK_TO_IP
         value: "true"
-    disk:
-      name: astropath-data
-      mountPath: /app/detections
-      sizeGB: 1
