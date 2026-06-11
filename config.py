@@ -202,5 +202,3 @@ ENABLE_MEMORY_PROFILING = False
 DEBUG_MODE = True  # Show verbose output
 SAVE_DEBUG_FRAMES = False  # Save each processed frame
 DEMO_VIDEO_PATH = os.path.join(DATA_DIR, "test.mp4")  # For testing without real camera
-
-

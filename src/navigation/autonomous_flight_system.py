@@ -6,7 +6,7 @@ Implements the end-to-end software architecture including:
 3. Sensor Fusion Engine (Kalman Filter)
 4. Environment Perception Layer (Bird, Wire, Tree, Pothole Detection)
 5. Threat Assessment & Obstacle Classification
-6. Dynamic Path Planning AI (Route Optimization, Re-routing, Emergency Landing)
+6. Dynamic Path Planning AI (Route Optimisation, Re-routing, Emergency Landing)
 7. Battery & Weather Safety Decision Engine
 8. Target Delivery Control
 """
@@ -156,7 +156,7 @@ class ThreatAssessment:
 
 
 class DynamicPathPlanningAI:
-    """Handles routing optimizations, obstacle bypasses, and emergency landing paths."""
+    """Handles routing optimisations, obstacle bypasses, and emergency landing paths."""
     def __init__(self, default_alt=15.0):
         self.default_alt = default_alt
 
@@ -282,8 +282,8 @@ class AutonomousFlightSystem:
                     lz = self.path_planner.find_safe_landing_spot(self.fused_state['lat'], self.fused_state['lon'])
                     self.true_state = lz
                     logger.critical(f"Autopilot Override: Safety Decision Engine taking command. Navigating to Safe LZ.")
-                elif safety_status in ["OVERRIDE_STABILIZE_WIND", "override_stabilize_rain"]:
-                    logger.warning("Safety Decision Engine Override: Activating Auto-Stabilization. Reducing velocity to 1.5m/s.")
+                elif safety_status in ["OVERRIDE_STABILISE_WIND", "OVERRIDE_STABILISE_RAIN"]:
+                    logger.warning("Safety Decision Engine Override: Activating Auto-Stabilisation. Reducing velocity to 1.5m/s.")
                     self.velocity = 1.5
                     
             # 7. Check target delivery status

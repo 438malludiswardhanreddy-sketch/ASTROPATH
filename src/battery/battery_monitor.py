@@ -58,9 +58,9 @@ class SafetyDecisionEngine:
             return "OVERRIDE_RTH_BATTERY"
         elif wind > self.max_wind_threshold:
             logger.critical("⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!")
-            return "OVERRIDE_STABILIZE_WIND"
+            return "OVERRIDE_STABILISE_WIND"
         elif rain > self.max_rain_threshold:
             logger.critical("⚠️ SAFETY INTERVENTION: Extreme precipitation detected!")
-            return "OVERRIDE_STABILIZE_RAIN"
+            return "OVERRIDE_STABILISE_RAIN"
             
         return "NORMAL"

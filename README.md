@@ -1,5 +1,7 @@
 # 🚀 ASTROPATH: Sky-View Autonomous Drone Navigation and Road Damage Detection System
 
+![ASTROPATH Project Banner](assets/astropath_banner.png)
+
 The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (meaning *View* or *Way*), representing a sky-view system for road damage monitoring and rapid response coordination.
 
 ![Python Version](https://img.shields.io/badge/Python-3.11-blue)
@@ -12,9 +14,10 @@ The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (m
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
 
 ## 💡 Why This Project Matters
-ASTROPATH demonstrates practical application of:
+
+ASTROPATH demonstrates practical applications of:
 *   **Artificial Intelligence & Computer Vision:** Edge-based object detection and classification.
-*   **Sensor Fusion State Estimation:** Custom 3D Kalman Filter for spatial stabilization.
+*   **Sensor Fusion State Estimation:** Custom 3D Kalman Filter for spatial stabilisation.
 *   **Autonomous Navigation:** Autopilot trajectory routing and waypoint tracing.
 *   **Drone Systems Engineering:** Telemetry parsing and MAVLink controller wrappers.
 *   **IoT Integration:** WiFi streaming camera payload feeds (ESP32-CAM).
@@ -72,13 +75,18 @@ The custom ESP32-CAM optical sensor payload, red NEO-6M GPS receiver module, and
 
 ![ASTROPATH Hardware Prototype](assets/navigation.png)
 
+### 📹 Flight & Perception Simulation Demo
+A high-fidelity visualisation of the autonomous drone flight simulation and perception engine operating in real-time, showing lateral/vertical bypass detours and sensor fusion telemetry.
+
+![ASTROPATH Flight Simulation Demo](assets/astropath_demo.png)
+
 ---
 
 ## 📊 Performance Metrics
-*   **Target Detection Accuracy:** ~94% mAP (simulation benchmark on road anomalies).
-*   **Obstacle Classes Monitored:** Birds, Wires, Trees, Potholes, and Buildings.
-*   **Target Inference Latency:** <100 ms on edge CPU (<15 ms target on Edge TPU).
-*   **Safety Simulation Success Rate:** 98% across simulated scenarios.
+*   **Target Detection Accuracy:** ~94% mAP (simulation benchmark)
+*   **Target Inference Latency:** <100 ms
+*   **Safety Simulation Success Rate:** 98% across simulated scenarios
+*   **Obstacle Classes Monitored:** Birds, Wires, Trees, Potholes, and Buildings (simulated)
 
 ---
 
