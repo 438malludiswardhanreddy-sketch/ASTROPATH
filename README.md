@@ -523,6 +523,10 @@ We welcome contributions from researchers, smart-city engineers, and software pr
 
 ---
 
+## ⚖️ Intellectual Property & Patent Notice
+
+Certain software architectures, sensor fusion state estimation methods, and flight safety override algorithms described in this project (specifically detailed in [patent_draft.md](research/patent_draft.md)) may be subject to future patent filings. This repository is provided for educational, evaluation, and professional demonstration purposes.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
