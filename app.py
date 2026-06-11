@@ -19,10 +19,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config
 from src.utils import setup_logger
 from src.database import DetectionDatabase
-from src.gps_handler import GPSHandler
+from src.navigation.gps_handler import GPSHandler
 # Drone integration
-from src.drone_controller import DroneController
-from src.drone_detector import DroneDetector
+from src.navigation.drone_controller import DroneController
+from src.detection.drone_detector import DroneDetector
 
 logger = setup_logger(__name__)
 

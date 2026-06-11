@@ -36,13 +36,13 @@ def main_menu():
 
 def train_classifier():
     """Launch training"""
-    from src.train_classifier import main
+    from src.detection.train_classifier import main
     main()
 
 
 def detect_edge():
     """Launch edge detection"""
-    from src.detect_edge import main
+    from src.detection.detect_edge import main
     main()
 
 
@@ -106,7 +106,7 @@ def configure_settings():
 
 def test_gps():
     """Test GPS handler"""
-    from src.gps_handler import GPSHandler
+    from src.navigation.gps_handler import GPSHandler
     import time
     
     print("\n" + "="*70)
@@ -167,7 +167,7 @@ def test_gps():
 
 def test_esp32():
     """Test ESP32-CAM connection"""
-    from src.esp32_camera import ESP32Camera
+    from src.detection.esp32_camera import ESP32Camera
     import time
     
     print("\n" + "="*70)

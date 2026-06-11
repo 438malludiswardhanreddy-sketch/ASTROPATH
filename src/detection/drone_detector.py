@@ -11,7 +11,7 @@ from datetime import datetime
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import config
 from src.utils import setup_logger
 from src.database import DetectionDatabase

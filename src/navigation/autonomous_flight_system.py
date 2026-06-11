@@ -15,7 +15,16 @@ import math
 import time
 import random
 import logging
+import os
+import sys
 from datetime import datetime
+
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+# Import modularised architecture components
+from src.fusion.sensor_fusion import SensorFusionEngine
+from src.battery.battery_monitor import BatteryWeatherMonitor, SafetyDecisionEngine
 
 # Configure logging for professional terminal output
 logging.basicConfig(
@@ -84,48 +93,7 @@ class SensorSuite:
         }
 
 
-class SensorFusionEngine:
-    """Fuses noisy GPS, Altimeter, and IMU data using a simplified Kalman Filter."""
-    def __init__(self, initial_lat, initial_lon, initial_alt):
-        # State estimation [lat, lon, alt]
-        self.state = np_array = [initial_lat, initial_lon, initial_alt]
-        # Estimation Covariance
-        self.P = [1e-8, 1e-8, 0.1]
-        # Measurement uncertainty
-        self.R = [5e-9, 5e-9, 0.09]  # GPS and altimeter variance
-        # Process uncertainty
-        self.Q = [1e-10, 1e-10, 0.01]
-
-    def fuse(self, raw_measurements):
-        """Performs Predict and Correct steps of the Kalman Filter."""
-        gps = raw_measurements['gps']
-        alt = raw_measurements['altimeter']['alt']
-        
-        # Predict (Simplified: assuming near constant position + process noise Q)
-        for i in range(3):
-            self.P[i] += self.Q[i]
-            
-        # Correct (Update step using measurement models)
-        # 0: Latitude
-        k_lat = self.P[0] / (self.P[0] + self.R[0])
-        self.state[0] = self.state[0] + k_lat * (gps['lat'] - self.state[0])
-        self.P[0] = (1 - k_lat) * self.P[0]
-        
-        # 1: Longitude
-        k_lon = self.P[1] / (self.P[1] + self.R[1])
-        self.state[1] = self.state[1] + k_lon * (gps['lon'] - self.state[1])
-        self.P[1] = (1 - k_lon) * self.P[1]
-        
-        # 2: Altitude
-        k_alt = self.P[2] / (self.P[2] + self.R[2])
-        self.state[2] = self.state[2] + k_alt * (alt - self.state[2])
-        self.P[2] = (1 - k_alt) * self.P[2]
-        
-        return {
-            'lat': self.state[0],
-            'lon': self.state[1],
-            'alt': self.state[2]
-        }
+# SensorFusionEngine is imported from src.fusion.sensor_fusion
 
 
 class EnvironmentPerceptionLayer:
@@ -184,36 +152,7 @@ class ThreatAssessment:
         return highest_threat, primary_threat_label
 
 
-class BatteryWeatherMonitor:
-    """Monitors battery capacity, weather parameters, and issues safety flags."""
-    def __init__(self, initial_battery=100.0, wind_speed=12.0, rain_rate=0.0):
-        self.battery = initial_battery
-        self.wind_speed = wind_speed  # Knots
-        self.rain_rate = rain_rate  # mm/hour
-
-    def update_sensors(self, step):
-        """Simulates changes in battery and weather as time progresses."""
-        # Standard battery drain per step
-        self.battery -= 4.5
-        
-        # Simulate dynamic environmental changes at specific steps
-        if step == 5:
-            self.wind_speed = 28.5  # Critical Wind Threshold
-            logger.warning("💨 Wind speed sensor reporting high gust: 28.5 knots!")
-        elif step == 7:
-            self.wind_speed = 12.0
-            self.rain_rate = 18.0   # Heavy Rain Threshold
-            logger.warning("🌧️ Rain rate sensor reporting heavy downpour: 18.0 mm/h!")
-        elif step == 8:
-            self.rain_rate = 0.0
-            self.battery = 12.0     # Critical Battery Threshold
-            logger.warning("🔋 Battery capacity dropped to critical levels: 12.0%!")
-            
-        return {
-            'battery': self.battery,
-            'wind_speed': self.wind_speed,
-            'rain_rate': self.rain_rate
-        }
+# BatteryWeatherMonitor is imported from src.battery.battery_monitor
 
 
 class DynamicPathPlanningAI:
@@ -257,31 +196,7 @@ class DynamicPathPlanningAI:
         return {'lat': lz_lat, 'lon': lz_lon, 'alt': 0.0}
 
 
-class SafetyDecisionEngine:
-    """Analyzes diagnostic data and overrides flight controller states in case of safety breaches."""
-    def __init__(self):
-        # Threshold constants
-        self.min_battery_threshold = 15.0  # %
-        self.max_wind_threshold = 25.0     # knots
-        self.max_rain_threshold = 15.0     # mm/h
-
-    def assess_safety(self, battery_status):
-        """Determines if safety overrides are required."""
-        bat = battery_status['battery']
-        wind = battery_status['wind_speed']
-        rain = battery_status['rain_rate']
-        
-        if bat < self.min_battery_threshold:
-            logger.critical("⚠️ SAFETY INTERVENTION: Critical Low Battery!")
-            return "OVERRIDE_RTH_BATTERY"
-        elif wind > self.max_wind_threshold:
-            logger.critical("⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!")
-            return "OVERRIDE_STABILIZE_WIND"
-        elif rain > self.max_rain_threshold:
-            logger.critical("⚠️ SAFETY INTERVENTION: Extreme precipitation detected!")
-            return "OVERRIDE_STABILIZE_RAIN"
-            
-        return "NORMAL"
+# SafetyDecisionEngine is imported from src.battery.battery_monitor
 
 
 class AutonomousFlightSystem:

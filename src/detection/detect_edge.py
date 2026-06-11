@@ -12,11 +12,11 @@ import time
 from datetime import datetime
 import threading
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import config
 from src.utils import setup_logger, get_geolocation, save_image, FPSCounter, ensure_dir_exists, create_detection_payload
-from src.gps_handler import GPSHandler
-from src.drone_controller import DroneController
+from src.navigation.gps_handler import GPSHandler
+from src.navigation.drone_controller import DroneController
 
 logger = setup_logger(__name__)
 

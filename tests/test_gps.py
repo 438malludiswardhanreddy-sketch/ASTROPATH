@@ -22,9 +22,9 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 # Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.gps_handler import GPSHandler, GPSQuality
+from src.navigation.gps_handler import GPSHandler, GPSQuality
 
 # Configure logging
 logging.basicConfig(

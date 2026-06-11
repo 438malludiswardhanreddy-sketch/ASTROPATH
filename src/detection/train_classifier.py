@@ -19,7 +19,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 import cv2
 
 # Add parent directory to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import config
 from src.utils import setup_logger, ensure_dir_exists, validate_training_data
 

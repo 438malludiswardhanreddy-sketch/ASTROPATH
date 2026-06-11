@@ -1,4 +1,4 @@
-﻿# 🚀 ASTROPATH: Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
+# 🚀 ASTROPATH: Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
 
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
 
@@ -32,17 +32,17 @@ ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate 
 ### 📊 High-Tech Real-Time Dashboard
 A centralised control room interface providing real-time AI computer vision feeds, Leaflet.js interactive maps for spatial analysis, automatic hotspot heatmaps, and repair order tracking.
 
-![ASTROPATH Web Dashboard](assets/dashboard_mockup.png)
+![ASTROPATH Web Dashboard](assets/dashboard.png)
 
 ### 🚁 Autonomous Drone HUD & Edge Perception
 A representation of the drone's aerial telemetry overlay and computer vision engine dynamically scanning for potholes, calculating real-world GPS coordinates, and reporting severity values.
 
-![ASTROPATH Aerial HUD](assets/drone_vision_mockup.png)
+![ASTROPATH Aerial HUD](assets/detection.png)
 
 ### 🛠️ Working Hardware Prototype
 The custom ESP32-CAM optical sensor payload, red NEO-6M GPS receiver module, and core telemetry bus integrated onto a simulated quadcopter platform.
 
-![ASTROPATH Hardware Prototype](assets/hardware_prototype.png)
+![ASTROPATH Hardware Prototype](assets/navigation.png)
 
 ---
 
@@ -167,7 +167,7 @@ The logical pipeline of ASTROPATH flows from destination planning and drone exec
 ### 2. Physical Deployment Architecture
 This diagram outlines how data is ingested, processed, stored, and visualised:
 
-![ASTROPATH Physical Architecture](assets/astropath_architecture.png)
+![ASTROPATH Physical Architecture](docs/architecture.png)
 
 ### 3. Pipeline Flow Chart (Mermaid)
 ```mermaid
@@ -244,30 +244,68 @@ chmod +x start.sh
 
 ```
 ASTROPATH/
-├── assets/                 # High-fidelity project screenshots and diagrams
-├── src/                    # Source files implementing application modules
-│   ├── detect_edge.py      # Core OpenCV/YOLO edge processing pipelines
-│   ├── drone_detector.py   # Telemetry parsing & aerial video processing
-│   ├── drone_controller.py # Drone MAVLink commands & flight control wrapper
-│   ├── gps_handler.py      # Serial/USB GPS parsing (NMEA decoding)
-│   ├── database.py         # SQLite connection, migration, & query layer
-│   ├── citizen_upload.py   # Citizen report ingestion & image compression
-│   └── esp32_camera.py     # Network stream fetcher for ESP32-CAM edge boards
-├── templates/              # HTML layout components
-│   ├── index.html          # Main live feed & reporting interface
-│   └── dashboard.html      # Leaflet map visualisation dashboard
-├── static/                 # Static front-end assets
-│   ├── css/style.css       # Premium, responsive dark-mode stylesheet
-│   └── js/                 # Client-side map & websocket controller logic
-├── models/                 # Neural network config & weights files
-│   ├── yolov4-tiny.cfg     # YOLOv4-tiny layer definition
-│   └── obj.names           # Class labels (e.g., pothole)
-├── app.py                  # Main web application entry point
-├── main.py                 # CLI interface menu for diagnostic scripts
-├── config.py               # centralised configuration parameters
+│
+├── README.md               # Main project overview and showcase portal
 ├── requirements.txt        # Python dependency manifest
-├── Dockerfile              # Docker container configuration
-└── docker-compose.yml      # Multi-container service definitions
+├── LICENSE                 # MIT Open-Source Licence details
+├── .gitignore              # Version control ignore lists
+├── config.py               # Centralised configuration parameters
+├── app.py                  # Main web application entry point
+├── main.py                 # CLI interactive diagnostics entry menu
+│
+├── src/                    # Modular source package files
+│   ├── api_client.py       # Municipal API synchronization client
+│   ├── citizen_upload.py   # Citizen app endpoint handler
+│   ├── dashboard.py        # Web dashboard HTTP server
+│   ├── database.py         # SQLite connection, migration, and query layer
+│   ├── diagnostics.py      # System self-test scripts
+│   ├── utils.py            # Logger, image compressor, and general utility functions
+│   │
+│   ├── detection/          # Computer vision perception modules
+│   │   ├── detect_edge.py  # YOLO edge detection pipeline
+│   │   ├── drone_detector.py # Aerial HUD frame scanning algorithms
+│   │   ├── esp32_camera.py # MJPEG stream parser for WiFi cameras
+│   │   └── train_classifier.py # MobileNetV2 ML training pipelines
+│   │
+│   ├── navigation/         # Flight controller and guidance modules
+│   │   ├── autonomous_flight_system.py # End-to-end flight simulation orchestra
+│   │   ├── drone_controller.py # MAVLink commands & flight control wrapper
+│   │   └── gps_handler.py  # USB/Serial NMEA GPS parser
+│   │
+│   ├── battery/            # Power safety monitor package
+│   │   └── battery_monitor.py # Battery & weather safety rules engine
+│   │
+│   └── fusion/             # Multi-sensor localization package
+│       └── sensor_fusion.py # 3D Kalman Filter state estimator
+│
+├── docs/                   # System architectural and configuration manuals
+│   ├── architecture.png    # System physical architecture flow diagram
+│   ├── Project_Report.md   # Academic project report (Abstract, Objective, Methodology)
+│   ├── DEPLOY_GUIDE.md     # Production deployment manual
+│   ├── DRONE_GUIDE.md      # UAV SITL simulation configuration manual
+│   ├── ESP32_CAM_SETUP.md  # ESP32-CAM micro-controller wiring guide
+│   └── GPS_SETUP_GUIDE.md  # NEO-6M GPS serial integration guidelines
+│
+├── assets/                 # High-fidelity project showcase screenshots
+│   ├── dashboard.png       # Web control room map dashboard
+│   ├── detection.png       # Drone aerial HUD object detection
+│   ├── navigation.png      # Custom hardware payload photo
+│   └── logo/               # Graphic identity directory
+│
+├── research/               # Technical research and intellectual property
+│   ├── literature_review.md # Literature survey of state of the art
+│   └── patent_draft.md     # IPO-style patent specification draft
+│
+├── demo/                   # Video demonstration guidelines
+│   └── README.md           # Instructions for video/RTSP streams
+│
+├── tests/                  # Unit and diagnostics test package
+│   ├── test_drone_stream.py # RTSP stream verification tool
+│   └── test_gps.py         # Standalone serial GPS test utility
+│
+├── templates/              # Flask HTML templates (Dashboard & Citizen portal)
+├── static/                 # Front-end static assets (style.css & maps.js)
+└── models/                 # YOLO neural network configuration and weights files
 ```
 
 ---
@@ -291,7 +329,7 @@ To mount a serial GPS receiver on a ground patrol vehicle:
     GPS_ENABLED = True
     GPS_PORT = "COM3"  # On Linux, use "/dev/ttyUSB0"
     ```
-3.  Run diagnostics: `python test_gps.py` to confirm NMEA coordinates are parsing correctly.
+3.  Run diagnostics: `python tests/test_gps.py` to confirm NMEA coordinates are parsing correctly.
 
 ---
 
@@ -313,20 +351,20 @@ To run a simulated mission alongside the telemetry pipeline:
 1. Run your ArduPilot SITL simulator.
 2. Test the telemetric stream parser:
    ```bash
-   python test_drone_stream.py
+   python tests/test_drone_stream.py
    ```
 3. Run the aerial surveyor:
    ```bash
-   python src/drone_detector.py
+   python src/detection/drone_detector.py
    ```
 
-*For step-by-step guidance on setting up flight simulators, read [DRONE_GUIDE.md](DRONE_GUIDE.md).*
+*For step-by-step guidance on setting up flight simulators, read [DRONE_GUIDE.md](docs/DRONE_GUIDE.md).*
 
 ---
 
 ## 🤖 Autonomous Flight & Safety Simulation Engine
 
-To test the end-to-end logical flow of the ASTROPATH architecture, the repository contains a standalone physical and environmental flight simulation engine at [autonomous_flight_system.py](file:///C:/Users/mallu/OneDrive/Documents/Desktop/pothole/ASTROPATH-1/src/autonomous_flight_system.py).
+To test the end-to-end logical flow of the ASTROPATH architecture, the repository contains a standalone physical and environmental flight simulation engine at [autonomous_flight_system.py](src/navigation/autonomous_flight_system.py).
 
 This simulator models the flight cycle through 10 chronological steps, dynamically injecting real-world obstacles and sensor anomalies:
 1. **Takeoff & Altitude Hold:** Simulates GPS, Altimeter, and IMU sensor data.
@@ -339,7 +377,7 @@ This simulator models the flight cycle through 10 chronological steps, dynamical
 
 ### How to Run the Simulator
 ```bash
-python src/autonomous_flight_system.py
+python src/navigation/autonomous_flight_system.py
 ```
 
 ### Complete Simulation Output Logs
