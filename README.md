@@ -7,8 +7,20 @@ The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (m
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Research-orange)](research/literature_review.md)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://astropath-0yd4.onrender.com)
+[![CI Status](https://github.com/438malludiswardhanreddy-sketch/ASTROPATH/actions/workflows/ci.yml/badge.svg)](https://github.com/438malludiswardhanreddy-sketch/ASTROPATH/actions/workflows/ci.yml)
 
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
+
+## 💡 Why This Project Matters
+ASTROPATH demonstrates practical application of:
+*   **Artificial Intelligence & Computer Vision:** Edge-based object detection and classification.
+*   **Sensor Fusion State Estimation:** Custom 3D Kalman Filter for spatial stabilization.
+*   **Autonomous Navigation:** Autopilot trajectory routing and waypoint tracing.
+*   **Drone Systems Engineering:** Telemetry parsing and MAVLink controller wrappers.
+*   **IoT Integration:** WiFi streaming camera payload feeds (ESP32-CAM).
+*   **Safety-Critical Decision Systems:** Autonomic weather-aware overrides and emergency path calculations.
+
+This project was developed to explore intelligent aerial infrastructure monitoring and autonomous mission execution using modern AI and robotics technologies.
 
 ## 🚀 Key Highlights
 *   **Autonomous Drone Navigation:** Real-time autopilot mission routing and waypoint tracing.
@@ -22,23 +34,24 @@ ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate 
 
 ## 📌 Table of Contents
 1. [🌟 Interface & System Showcase](#-interface--system-showcase)
-2. [📊 Performance Metrics](#-performance-metrics)
-3. [💡 The Project Vision](#-the-project-vision)
-4. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
-5. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
-6. [💻 Tech Stack](#-tech-stack)
-7. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
-8. [📂 Codebase Structure](#-codebase-structure)
-9. [🔧 Edge & Hardware Configuration](#-edge--hardware-configuration)
-10. [🚁 Drone & Mission Controller Integration](#-drone--mission-controller-integration)
-11. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
-12. [📊 RESTful API Specifications](#-restful-api-specifications)
-13. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
-14. [📚 Research & Innovation](#-research--innovation)
-15. [🤝 Contribution & Code Standards](#-contribution--code-standards)
-16. [👥 Team & Contact](#-team--contact)
-17. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
-18. [📄 License](#-license)
+2. [💡 Why This Project Matters](#-why-this-project-matters)
+3. [📊 Performance Metrics](#-performance-metrics)
+4. [💡 The Project Vision](#-the-project-vision)
+5. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
+6. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
+7. [💻 Tech Stack](#-tech-stack)
+8. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
+9. [📂 Codebase Structure](#-codebase-structure)
+10. [🔧 Edge & Hardware Configuration](#-edge--hardware-configuration)
+11. [🚁 Drone & Mission Controller Integration](#-drone--mission-controller-integration)
+12. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
+13. [📊 RESTful API Specifications](#-restful-api-specifications)
+14. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
+15. [📚 Research & Innovation](#-research--innovation)
+16. [🤝 Contribution & Code Standards](#-contribution--code-standards)
+17. [👥 Team & Contact](#-team--contact)
+18. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
+19. [📄 License](#-license)
 
 ---
 
@@ -62,10 +75,10 @@ The custom ESP32-CAM optical sensor payload, red NEO-6M GPS receiver module, and
 ---
 
 ## 📊 Performance Metrics
-*   **Detection Accuracy:** $94\%$ average precision (mAP) on road damage anomalies (potholes).
+*   **Target Detection Accuracy:** ~94% mAP (simulation benchmark on road anomalies).
 *   **Obstacle Classes Monitored:** Birds, Wires, Trees, Potholes, and Buildings.
-*   **Inference Latency:** $<100\text{ ms}$ processing on standard edge CPU ($<15\text{ ms}$ target on Edge TPU).
-*   **Mission Safety Success:** $98\%$ automated safe execution rate under simulated sensor/environmental faults.
+*   **Target Inference Latency:** <100 ms on edge CPU (<15 ms target on Edge TPU).
+*   **Safety Simulation Success Rate:** 98% across simulated scenarios.
 
 ---
 
