@@ -1,4 +1,4 @@
-# 🚀 ASTROPATH: Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
+﻿# 🚀 ASTROPATH: Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
 
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
 
@@ -30,7 +30,7 @@ ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate 
 ## 🌟 Interface & System Showcase
 
 ### 📊 High-Tech Real-Time Dashboard
-A centralized control room interface providing real-time AI computer vision feeds, Leaflet.js interactive maps for spatial analysis, automatic hotspot heatmaps, and repair order tracking.
+A centralised control room interface providing real-time AI computer vision feeds, Leaflet.js interactive maps for spatial analysis, automatic hotspot heatmaps, and repair order tracking.
 
 ![ASTROPATH Web Dashboard](assets/dashboard_mockup.png)
 
@@ -129,7 +129,7 @@ The logical pipeline of ASTROPATH flows from destination planning and drone exec
 
 ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
 │ Route       │ │ Re-routing  │ │ Emergency   │
-│ Optimization│ │ Engine      │ │ Landing AI  │
+│ optimisation│ │ Engine      │ │ Landing AI  │
 └──────┬──────┘ └──────┬──────┘ └──────┬──────┘
        │               │               │
        └───────────────┼───────────────┘
@@ -185,7 +185,7 @@ graph TD
     
     B --> D[(SQLite Ground DB)]
     D --> E[Real-Time Dashboard]
-    E --> F[Heatmap Visualization]
+    E --> F[Heatmap visualisation]
     E --> G[Repair Status Management]
 ```
 
@@ -199,7 +199,7 @@ graph TD
 *   **Aerial RTSP Streams:** Receives real-time video feeds from drone cameras via RTSP or UDP connections.
 
 ### 2. Computer Vision & Perception Layer
-*   **YOLOv4-Tiny Model:** Analyzes 20-30 frames per second on typical hardware, outputting precise bounding boxes enclosing road defects.
+*   **YOLOv4-Tiny Model:** analyses 20-30 frames per second on typical hardware, outputting precise bounding boxes enclosing road defects.
 *   **MobileNetV2 Classifier:** Validates detections, filters out false positives, and estimates pothole volume to determine repair priority (Low, Medium, High).
 *   **Spatial Telemetry Projection:** Translates drone elevation, tilt, and gimbal angle into exact ground coordinates for potholes.
 
@@ -255,7 +255,7 @@ ASTROPATH/
 │   └── esp32_camera.py     # Network stream fetcher for ESP32-CAM edge boards
 ├── templates/              # HTML layout components
 │   ├── index.html          # Main live feed & reporting interface
-│   └── dashboard.html      # Leaflet map visualization dashboard
+│   └── dashboard.html      # Leaflet map visualisation dashboard
 ├── static/                 # Static front-end assets
 │   ├── css/style.css       # Premium, responsive dark-mode stylesheet
 │   └── js/                 # Client-side map & websocket controller logic
@@ -264,7 +264,7 @@ ASTROPATH/
 │   └── obj.names           # Class labels (e.g., pothole)
 ├── app.py                  # Main web application entry point
 ├── main.py                 # CLI interface menu for diagnostic scripts
-├── config.py               # Centralized configuration parameters
+├── config.py               # centralised configuration parameters
 ├── requirements.txt        # Python dependency manifest
 ├── Dockerfile              # Docker container configuration
 └── docker-compose.yml      # Multi-container service definitions
@@ -344,7 +344,7 @@ python src/autonomous_flight_system.py
 
 ### Complete Simulation Output Logs
 ```text
-[22:36:56] [INFO] [ASTROPATH_Core] Mission Planner initialized. Start: (17.6599, 75.9064) | Target: (17.6682, 75.9125)
+[22:36:56] [INFO] [ASTROPATH_Core] Mission Planner initialised. Start: (17.6599, 75.9064) | Target: (17.6682, 75.9125)
 [22:36:56] [INFO] [ASTROPATH_Core] =========================================================
 [22:36:56] [INFO] [ASTROPATH_Core] 🚀 ASTROPATH AUTONOMIC FLIGHT MISSION STARTING
 [22:36:56] [INFO] [ASTROPATH_Core] =========================================================
@@ -394,7 +394,7 @@ Sensor Fusion State: Lat: 17.662179 | Lon: 75.908141 | Alt: 15.88m
 AI Vision Layer: Detected 1 objects.
   └─ Label: Pothole | Confidence: 96.0% | Spatial Offset: (x: 1.969m, y: 2.295m)
 [CRITICAL] ⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!
-Safety Decision Engine Override: Activating Auto-Stabilization. Reducing velocity to 1.5m/s.
+Safety Decision Engine Override: Activating Auto-stabilisation. Reducing velocity to 1.5m/s.
 
 --- [MISSION FLIGHT STEP 7/10] Mode: CRUISE ---
 Monitor Stats - Battery: 68.5% | Wind: 28.5 kts | Rain: 0.0 mm/h
@@ -406,7 +406,7 @@ AI Vision Layer: Detected 1 objects.
 Detour Action: Hover-in-place state activated (wait for clearing).
 Autopilot Command: Adjusting heading/speed vectors to detours.
 [CRITICAL] ⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!
-Safety Decision Engine Override: Activating Auto-Stabilization. Reducing velocity to 1.5m/s.
+Safety Decision Engine Override: Activating Auto-stabilisation. Reducing velocity to 1.5m/s.
 
 --- [MISSION FLIGHT STEP 8/10] Mode: CRUISE ---
 [WARNING] 🌧️ Rain rate sensor reporting heavy downpour: 18.0 mm/h!
@@ -466,7 +466,7 @@ print(response.json())
 
 ## 🤝 Contribution & Code Standards
 
-We welcome contributions from researchers, smart-city engineers, and students!
+We welcome contributions from researchers, smart-city engineers, and software professionals and smart-city researchers!
 1.  Fork the repository.
 2.  Create a feature branch (`git checkout -b feature/AmazingFeature`).
 3.  Ensure your code conforms to PEP-8 guidelines.
@@ -489,3 +489,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 **Designed to make urban infrastructure safer, smarter, and more resilient. 🚗 📱 🚁**
+
+

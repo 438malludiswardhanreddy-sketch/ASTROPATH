@@ -1,4 +1,4 @@
-# GPS Module Integration Guide for ASTROPATH
+﻿# GPS Module Integration Guide for ASTROPATH
 ## Real-Time Location Tracking for Pothole Detection
 
 ---
@@ -200,7 +200,7 @@ GPS_BAUD = 9600            # Some modules use 38400
 GPS_MIN_QUALITY = 1        # Accept any GPS fix (1=good)
 GPS_MIN_SATS = 4           # Need 4+ satellites (3 for basic fix)
 
-# Fallback behavior
+# Fallback behaviour
 GPS_USE_CACHED_IF_NO_FIX = True   # Use last known position if no fix
 GPS_FALLBACK_TO_IP = True         # Use IP geolocation if GPS fails
 ```
@@ -269,7 +269,7 @@ Once GPS is tested and working, update your detection script:
 from src.gps_handler import GPSHandler
 from config import GPS_ENABLED, GPS_PORT, GPS_BAUD, GPS_MIN_QUALITY
 
-# Initialize GPS
+# initialise GPS
 gps = GPSHandler(port=GPS_PORT, baud=GPS_BAUD) if GPS_ENABLED else None
 
 # In detection loop:
@@ -522,7 +522,7 @@ GPS_MAX_RETRIES = 20                # NMEA read attempts per poll
 GPS_MIN_SATS = 4                    # Minimum satellites for fix
 GPS_MIN_QUALITY = 1                 # Minimum acceptable quality (1=GPS_FIX)
 
-# Fallback behavior
+# Fallback behaviour
 GPS_USE_CACHED_IF_NO_FIX = True     # Use last position if no current fix
 GPS_FALLBACK_TO_IP = True           # Fall back to IP geolocation
 ```
@@ -599,3 +599,4 @@ udevadm info -a -n /dev/ttyACM0
 **Questions?** Check TRAINING_DATA_STATUS.md and config.py for additional context.
 
 Last Updated: 2026-01-31
+

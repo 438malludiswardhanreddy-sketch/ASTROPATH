@@ -1,6 +1,6 @@
-"""
+﻿"""
 ASTROPATH Configuration Module
-Centralized configuration for model paths, thresholds, and API endpoints
+Centralised configuration for model paths, thresholds, and API endpoints
 """
 
 import os
@@ -93,7 +93,7 @@ GPS_MIN_SATS = 4  # Minimum satellites for valid fix (3-4 typical)
 # Quality Threshold for Position Acceptance
 GPS_MIN_QUALITY = 1  # 0=NoFix, 1=GPSFix, 2=DGPS, etc. (1+ is safe)
 
-# Fallback Behavior
+# Fallback Behaviour
 GPS_USE_CACHED_IF_NO_FIX = True  # Use last known position if no current fix
 GPS_FALLBACK_TO_IP = True  # Use IP geolocation if GPS unavailable
 
@@ -157,7 +157,7 @@ DRONE_SURVEY_SPEED = 5      # Survey speed in m/s
 # - DJI Mini 3 Pro: Compact, 34 min flight, good for urban areas  
 # - Autel EVO II: Dual camera, 40 min flight, enterprise grade
 # - Skydio 2+: Autonomous flight, obstacle avoidance
-# - DIY Pixhawk: Budget option, fully customizable
+# - DIY Pixhawk: Budget option, fully customisable
 #
 # Video Streaming Setup:
 # 1. Most DJI drones: Use DJI SDK or third-party apps (Dronelink, Litchi)
@@ -172,7 +172,7 @@ USE_OPENVINO = False  # Use OpenVINO for YOLO acceleration on Pi
 USE_NCNN = False  # Use NCNN for YOLO on embedded devices
 
 # ==================== Fast Mode / Performance Tweaks ====================
-# Enable FAST_MODE to prioritize speed: uses smaller YOLO input size and lower-cost processing.
+# Enable FAST_MODE to prioritise speed: uses smaller YOLO input size and lower-cost processing.
 FAST_MODE = True
 # Input size for YOLO when FAST_MODE enabled. Smaller sizes increase speed at cost of accuracy.
 FAST_IMG_SIZE_YOLO = 320
@@ -202,3 +202,5 @@ ENABLE_MEMORY_PROFILING = False
 DEBUG_MODE = True  # Show verbose output
 SAVE_DEBUG_FRAMES = False  # Save each processed frame
 DEMO_VIDEO_PATH = os.path.join(DATA_DIR, "test.mp4")  # For testing without real camera
+
+

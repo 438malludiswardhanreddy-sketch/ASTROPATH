@@ -1,4 +1,4 @@
-# 🎥 ESP32-CAM Integration Guide
+﻿# 🎥 ESP32-CAM Integration Guide
 
 Complete setup instructions for integrating ESP32-CAM boards with ASTROPATH pothole detection system.
 
@@ -199,7 +199,7 @@ sys.path.insert(0, '.')
 from src.esp32_camera import MultiCameraController
 import time
 
-# Initialize controller
+# initialise controller
 controller = MultiCameraController()
 
 # Add multiple cameras
@@ -224,7 +224,7 @@ Update `src/detect_edge.py` to use ESP32-CAM:
 ```python
 from src.esp32_camera import ESP32Camera
 
-# Initialize ESP32-CAM
+# initialise ESP32-CAM
 camera = ESP32Camera(host="192.168.1.100", port=80)
 if not camera.connect():
     logger.error("Failed to connect to ESP32-CAM")
@@ -404,3 +404,4 @@ Saturation: 0 (or slightly lower for better detection)
 ---
 
 **For questions or issues, refer to the main [README.md](README.md) or GitHub Issues.**
+

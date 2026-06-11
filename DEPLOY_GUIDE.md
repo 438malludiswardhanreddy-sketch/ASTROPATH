@@ -1,4 +1,4 @@
-# 🚀 ASTROPATH - Complete Deployment Guide
+﻿# 🚀 ASTROPATH - Complete Deployment Guide
 
 ## 📋 Table of Contents
 - [Quick Start](#quick-start)
@@ -56,7 +56,7 @@ python app.py
 
 ### Configuration
 
-Edit `config.py` to customize settings:
+Edit `config.py` to customise settings:
 
 ```python
 # Camera Source
@@ -456,7 +456,7 @@ For production deployment:
 
 ---
 
-## 📈 Performance Optimization
+## 📈 Performance optimisation
 
 ### For High-Traffic Deployments
 
@@ -478,3 +478,5 @@ For support: 438malludiswardhanreddy@gmail.com
 ---
 
 **Ready to deploy! 🚀**
+
+

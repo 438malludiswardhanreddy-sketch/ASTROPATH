@@ -1,4 +1,4 @@
-# 🚁 ASTROPATH - Drone Integration Guide
+﻿# 🚁 ASTROPATH - Drone Integration Guide
 
 ## Complete Guide for Aerial Road Inspection with Drones
 
@@ -185,7 +185,7 @@ python src/drone_detector.py
 from src.drone_controller import DroneController
 from src.drone_detector import DroneDetector
 
-# Initialize
+# initialise
 drone = DroneController(stream_url="rtsp://192.168.1.100:8554/video")
 drone.connect()
 
@@ -446,7 +446,7 @@ DRONE_DETECTION_MIN_AREA = 0.001
 
 ---
 
-## 📊 Performance Optimization
+## 📊 Performance optimisation
 
 ### For Real-Time Processing
 
@@ -599,3 +599,4 @@ Before first drone survey:
 
 **ASTROPATH** - Smart Road Damage Detection from the Sky
 © 2026 Solapur Municipal Corporation
+
