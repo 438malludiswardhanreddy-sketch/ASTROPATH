@@ -1,6 +1,6 @@
 # 🚀 ASTROPATH: Sky-View Autonomous Drone Navigation and Road Damage Detection System
 
-![ASTROPATH Project Banner](assets/astropath_banner.png)
+![ASTROPATH Project Banner](assets/logo/banner.png)
 
 The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (meaning *View* or *Way*), representing a sky-view system for road damage monitoring and rapid response coordination.
 
@@ -12,6 +12,10 @@ The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (m
 [![CI Status](https://github.com/438malludiswardhanreddy-sketch/ASTROPATH/actions/workflows/ci.yml/badge.svg)](https://github.com/438malludiswardhanreddy-sketch/ASTROPATH/actions/workflows/ci.yml)
 
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
+
+## 🌐 System Scope
+
+ASTROPATH is an autonomous aerial monitoring platform that combines drone navigation, computer vision, and sensor fusion to inspect urban infrastructure. The system performs autonomous flight, obstacle avoidance, road-damage detection, and safety-aware mission execution while providing actionable data to municipal authorities.
 
 ## 💡 Why This Project Matters
 
@@ -36,25 +40,26 @@ This project was developed to explore intelligent aerial infrastructure monitori
 ---
 
 ## 📌 Table of Contents
-1. [🌟 Interface & System Showcase](#-interface--system-showcase)
-2. [💡 Why This Project Matters](#-why-this-project-matters)
-3. [📊 Performance Metrics](#-performance-metrics)
-4. [💡 The Project Vision](#-the-project-vision)
-5. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
-6. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
-7. [💻 Tech Stack](#-tech-stack)
-8. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
-9. [📂 Codebase Structure](#-codebase-structure)
-10. [🔧 Edge & Hardware Configuration](#-edge--hardware-configuration)
-11. [🚁 Drone & Mission Controller Integration](#-drone--mission-controller-integration)
-12. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
-13. [📊 RESTful API Specifications](#-restful-api-specifications)
-14. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
-15. [📚 Research & Innovation](#-research--innovation)
-16. [🤝 Contribution & Code Standards](#-contribution--code-standards)
-17. [👥 Team & Contact](#-team--contact)
-18. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
-19. [📄 License](#-license)
+1. [🌐 System Scope](#-system-scope)
+2. [🌟 Interface & System Showcase](#-interface--system-showcase)
+3. [💡 Why This Project Matters](#-why-this-project-matters)
+4. [📊 Performance Metrics](#-performance-metrics)
+5. [💡 The Project Vision](#-the-project-vision)
+6. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
+7. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
+8. [💻 Tech Stack](#-tech-stack)
+9. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
+10. [📂 Codebase Structure](#-codebase-structure)
+11. [🔧 Edge & Hardware Configuration](#-edge--hardware-configuration)
+12. [🚁 Drone & Mission Controller Integration](#-drone--mission-controller-integration)
+13. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
+14. [📊 RESTful API Specifications](#-restful-api-specifications)
+15. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
+16. [📚 Research & Innovation](#-research--innovation)
+17. [🤝 Contribution & Code Standards](#-contribution--code-standards)
+18. [👥 Team & Contact](#-team--contact)
+19. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
+20. [📄 License](#-license)
 
 ---
 
@@ -78,7 +83,7 @@ The custom ESP32-CAM optical sensor payload, red NEO-6M GPS receiver module, and
 ### 📹 Flight & Perception Simulation Demo
 A high-fidelity visualisation of the autonomous drone flight simulation and perception engine operating in real-time, showing lateral/vertical bypass detours and sensor fusion telemetry.
 
-![ASTROPATH Flight Simulation Demo](assets/astropath_demo.png)
+![ASTROPATH Flight Simulation Demo](assets/demo.png)
 
 ---
 
