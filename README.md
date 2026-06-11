@@ -1,6 +1,6 @@
 # 🚀 ASTROPATH: Sky-View Autonomous Drone Navigation and Road Damage Detection System
 
-![ASTROPATH Project Banner](assets/logo/banner.png)
+![ASTROPATH Banner](assets/logo/banner.png)
 
 The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (meaning *View* or *Way*), representing a sky-view system for road damage monitoring and rapid response coordination.
 
@@ -68,22 +68,22 @@ This project was developed to explore intelligent aerial infrastructure monitori
 ### 📊 High-Tech Real-Time Dashboard
 A centralised control room interface providing real-time AI computer vision feeds, Leaflet.js interactive maps for spatial analysis, automatic hotspot heatmaps, and repair order tracking.
 
-![ASTROPATH Web Dashboard](assets/dashboard.png)
+![Dashboard](assets/dashboard.png)
 
 ### 🚁 Autonomous Drone HUD & Edge Perception
 A representation of the drone's aerial telemetry overlay and computer vision engine dynamically scanning for potholes, calculating real-world GPS coordinates, and reporting severity values.
 
-![ASTROPATH Aerial HUD](assets/detection.png)
+![Detection](assets/detection.png)
 
 ### 🛠️ Working Hardware Prototype
 The custom ESP32-CAM optical sensor payload, red NEO-6M GPS receiver module, and core telemetry bus integrated onto a simulated quadcopter platform.
 
-![ASTROPATH Hardware Prototype](assets/navigation.png)
+![Hardware Prototype](assets/navigation.png)
 
 ### 📹 Flight & Perception Simulation Demo
 A high-fidelity visualisation of the autonomous drone flight simulation and perception engine operating in real-time, showing lateral/vertical bypass detours and sensor fusion telemetry.
 
-![ASTROPATH Flight Simulation Demo](assets/demo.png)
+![Flight Demo](assets/demo.gif)
 
 ---
 
