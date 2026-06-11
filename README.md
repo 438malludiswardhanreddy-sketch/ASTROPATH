@@ -29,6 +29,26 @@ ASTROPATH demonstrates practical applications of:
 
 This project was developed to explore intelligent aerial infrastructure monitoring and autonomous mission execution using modern AI and robotics technologies.
 
+## 🧑‍💻 Engineering Contributions
+ASTROPATH was built to showcase full-stack systems engineering capabilities. My individual contributions include:
+*   **System Architecture Design:** Designed the modular edge-assisted data ingestion and municipal orchestration flow.
+*   **Sensor Fusion Engine:** Developed the custom 3D Kalman Filter state estimator for spatial telemetry stabilisation.
+*   **Autonomous Navigation Logic:** Integrated autopilot trajectory routing and vertical/lateral bypass detour modules.
+*   **Safety Decision Engine:** Implemented weather and power-aware overrides to trigger Return-to-Home (RTH) on critical parameters.
+*   **Dashboard Integration:** Built the glassmorphism telemetry monitoring control room using Flask, CSS grid, and Leaflet.js maps.
+*   **Deployment Pipeline:** Configured Docker container definitions and Render blueprints for robust cloud deployment.
+
+## 🛠️ Skills & Technologies Mapping
+| Technical Area | Skill / Framework | Demonstrated In |
+|:---|:---|:---|
+| **Backend & API** | Python / Flask / SQLite3 / Waitress | Centralised server, SQLite migrations, and REST endpoints |
+| **Computer Vision** | OpenCV / Darknet YOLOv4-tiny / MobileNetV2 | Object detection pipeline, cropping bounding boxes, and severity rating |
+| **Sensor Fusion** | 3D Kalman Filter | Fusing GPS and altimeter streams to stabilise coordinate estimates |
+| **Drone Robotics** | MAVLink / pymavlink / ArduPilot / PX4 SITL | Flight controller wrapper API and autonomous simulation orchestration |
+| **Edge & Hardware** | C++ Arduino / ESP32-CAM / NEO-6M GPS | Low-power optical sensor payloads and NMEA serial GPS parsers |
+| **DevOps & Cloud** | Docker / Docker Compose / Render Blueprint | Containerised microservices, health checks, and cloud deployments |
+| **CI/CD Pipeline** | GitHub Actions / Flake8 Linting | Automated code quality testing and compilation builds |
+
 ## 🚀 Key Highlights
 *   **Autonomous Drone Navigation:** Real-time autopilot mission routing and waypoint tracing.
 *   **Multi-Sensor Fusion Architecture:** Custom 3D Kalman Filter state estimation for altitude/GPS stabilization.
@@ -41,25 +61,26 @@ This project was developed to explore intelligent aerial infrastructure monitori
 
 ## 📌 Table of Contents
 1. [🌐 System Scope](#-system-scope)
-2. [🌟 Interface & System Showcase](#-interface--system-showcase)
-3. [💡 Why This Project Matters](#-why-this-project-matters)
-4. [📊 Performance Metrics](#-performance-metrics)
-5. [💡 The Project Vision](#-the-project-vision)
-6. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
-7. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
-8. [💻 Tech Stack](#-tech-stack)
-9. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
-10. [📂 Codebase Structure](#-codebase-structure)
-11. [🔧 Edge & Hardware Configuration](#-edge--hardware-configuration)
-12. [🚁 Drone & Mission Controller Integration](#-drone--mission-controller-integration)
-13. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
-14. [📊 RESTful API Specifications](#-restful-api-specifications)
-15. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
-16. [📚 Research & Innovation](#-research--innovation)
-17. [🤝 Contribution & Code Standards](#-contribution--code-standards)
-18. [👥 Team & Contact](#-team--contact)
-19. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
-20. [📄 License](#-license)
+2. [🧑‍💻 Engineering Contributions](#-engineering-contributions)
+3. [🛠️ Skills & Technologies Mapping](#%EF%B8%8F-skills--technologies-mapping)
+4. [🌟 Interface & System Showcase](#-interface--system-showcase)
+5. [💡 Why This Project Matters](#-why-this-project-matters)
+6. [📊 Performance Metrics](#-performance-metrics)
+7. [💡 The Project Vision](#-the-project-vision)
+8. [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
+9. [🛰️ Functional Layer Breakdown](#%EF%B8%8F-functional-layer-breakdown)
+10. [💻 Tech Stack](#-tech-stack)
+11. [🚀 Quick Start (30 Seconds!)](#-quick-start-30-seconds)
+12. [📂 Codebase Structure](#-codebase-structure)
+13. [🔧 Edge Hardware & Drone Integration](#-edge-hardware--drone-integration)
+14. [🤖 Autonomous Flight & Safety Simulation Engine](#-autonomous-flight--safety-simulation-engine)
+15. [📊 RESTful API Specifications](#-restful-api-specifications)
+16. [🗺️ Roadmap](#%EF%B8%8F-roadmap)
+17. [📚 Research & Innovation](#-research--innovation)
+18. [🤝 Contribution & Code Standards](#-contribution--code-standards)
+19. [👥 Team & Contact](#-team--contact)
+20. [⚖️ Intellectual Property Notice](#%EF%B8%8F-intellectual-property-notice)
+21. [📄 License](#-license)
 
 ---
 
@@ -113,112 +134,14 @@ ASTROPATH automates the observation and management cycle by integrating multi-so
 
 ## 🏗️ System Architecture
 
-### 1. Functional System Flow
-The logical pipeline of ASTROPATH flows from destination planning and drone execution down to threat classification, safety oversight, and mission execution:
-
-```
-                    ┌─────────────────────┐
-                    │   Mission Planner   │
-                    │ (Destination Input) │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │  Flight Controller  │
-                    │ (PX4/ArduPilot)     │
-                    └──────────┬──────────┘
-                               │
-        ┌──────────────────────┼──────────────────────┐
-        ▼                      ▼                      ▼
-
-┌──────────────┐     ┌────────────────┐     ┌──────────────┐
-│ GPS Module   │     │ IMU Sensors    │     │ Altimeter    │
-│ Location     │     │ Orientation    │     │ Height Data  │
-└──────┬───────┘     └──────┬─────────┘     └──────┬───────┘
-       │                    │                      │
-       └────────────┬───────┴──────────────┬───────┘
-                    ▼                      ▼
-
-            ┌──────────────────────────────┐
-            │    Sensor Fusion Engine      │
-            │  (Kalman Filter / AI Model)  │
-            └──────────────┬───────────────┘
-                           │
-                           ▼
-
-            ┌──────────────────────────────┐
-            │ Environment Perception Layer │
-            └──────────────┬───────────────┘
-                           │
-      ┌────────────────────┼────────────────────┐
-      ▼                    ▼                    ▼
-
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│ Bird Detect  │   │ Wire Detect  │   │ Tree Detect  │
-│ AI Vision    │   │ AI Vision    │   │ AI Vision    │
-└──────┬───────┘   └──────┬───────┘   └──────┬───────┘
-       │                  │                  │
-       └──────────┬───────┴──────────┬───────┘
-                  ▼                  ▼
-
-         ┌───────────────────────────┐
-         │ Obstacle Classification   │
-         │ & Threat Assessment       │
-         └─────────────┬─────────────┘
-                       │
-                       ▼
-
-         ┌───────────────────────────┐
-         │ Dynamic Path Planning AI  │
-         │ (ASTROPATH Core Engine)   │
-         └─────────────┬─────────────┘
-                       │
-      ┌────────────────┼────────────────┐
-      ▼                ▼                ▼
-
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│ Route       │ │ Re-routing  │ │ Emergency   │
-│ optimisation│ │ Engine      │ │ Landing AI  │
-└──────┬──────┘ └──────┬──────┘ └──────┬──────┘
-       │               │               │
-       └───────────────┼───────────────┘
-                       ▼
-
-         ┌───────────────────────────┐
-         │ Battery & Weather Monitor │
-         └─────────────┬─────────────┘
-                       │
-         ┌─────────────┼─────────────┐
-         ▼             ▼             ▼
-
-   Low Battery      Heavy Rain     High Wind
-         │             │             │
-         └─────────────┼─────────────┘
-                       ▼
-
-         ┌───────────────────────────┐
-         │ Safety Decision Engine    │
-         └─────────────┬─────────────┘
-                       │
-                       ▼
-
-         ┌───────────────────────────┐
-         │ Autonomous Flight Control │
-         └─────────────┬─────────────┘
-                       │
-                       ▼
-
-         ┌───────────────────────────┐
-         │ Delivery / Mission Target │
-         └───────────────────────────┘
-```
-
-### 2. Physical Deployment Architecture
-This diagram outlines how data is ingested, processed, stored, and visualised:
+ASTROPATH uses a multi-layered autonomous systems architecture. Below is the physical deployment diagram outlining how edge streams are processed, stored, and visualised in real-time:
 
 ![ASTROPATH Physical Architecture](docs/architecture.png)
 
-### 3. Pipeline Flow Chart (Mermaid)
+### System Pipeline Details
+*   **[Functional System Flow Diagram (ASCII)](docs/architecture_ascii.md):** Maps the complete logical state estimation, perception, and safety override flow.
+*   **Pipeline Flowchart (Mermaid):** Visualises the path from raw ingestion to municipal database logging.
+
 ```mermaid
 graph TD
     A[Data Sources] --> B{Detection Engine}
@@ -293,14 +216,11 @@ chmod +x start.sh
 
 ```
 ASTROPATH/
-│
 ├── README.md               # Main project overview and showcase portal
-├── requirements.txt        # Python dependency manifest
 ├── LICENSE                 # MIT Open-Source Licence details
-├── .gitignore              # Version control ignore lists
-├── config.py               # Centralised configuration parameters
-├── app.py                  # Main web application entry point
-├── main.py                 # CLI interactive diagnostics entry menu
+├── requirements.txt        # Python dependency manifest
+├── Dockerfile              # Container building instruction manifest
+├── docker-compose.yml      # Orchestrates local container microservices
 │
 ├── src/                    # Modular source package files
 │   ├── api_client.py       # Municipal API synchronization client
@@ -327,227 +247,62 @@ ASTROPATH/
 │   └── fusion/             # Multi-sensor localization package
 │       └── sensor_fusion.py # 3D Kalman Filter state estimator
 │
+├── research/               # Technical research and intellectual property
+│   ├── literature_review.md # Literature survey of state of the art
+│   └── patent_draft.md     # IPO-style patent specification draft
+│
 ├── docs/                   # System architectural and configuration manuals
-│   ├── architecture.png    # System physical architecture flow diagram
+│   ├── ASTROPATH_Research_Paper.pdf # Compiled academic publication PDF
+│   ├── GITHUB_PROFILE_README.md     # Template for main GitHub profile page
 │   ├── Project_Report.md   # Academic project report (Abstract, Objective, Methodology)
+│   ├── SIMULATION.md       # Simulator descriptions and complete log outputs
+│   ├── HARDWARE_GUIDE.md   # ESP32-CAM and GPS serial integration manuals
+│   ├── API.md              # RESTful API endpoints and client upload examples
+│   ├── architecture_ascii.md # Detailed functional system flow in ASCII
+│   ├── architecture.png    # System physical architecture flow diagram
 │   ├── DEPLOY_GUIDE.md     # Production deployment manual
 │   ├── DRONE_GUIDE.md      # UAV SITL simulation configuration manual
 │   ├── ESP32_CAM_SETUP.md  # ESP32-CAM micro-controller wiring guide
 │   └── GPS_SETUP_GUIDE.md  # NEO-6M GPS serial integration guidelines
 │
 ├── assets/                 # High-fidelity project showcase screenshots
+│   ├── logo/
+│   │   └── banner.png      # High-tech repository horizontal header banner
 │   ├── dashboard.png       # Web control room map dashboard
 │   ├── detection.png       # Drone aerial HUD object detection
 │   ├── navigation.png      # Custom hardware payload photo
-│   └── logo/               # Graphic identity directory
+│   ├── demo.gif            # Simulation detour/override GIF animation
+│   └── astropath_architecture.png # Copy of system architecture flows
 │
-├── research/               # Technical research and intellectual property
-│   ├── literature_review.md # Literature survey of state of the art
-│   └── patent_draft.md     # IPO-style patent specification draft
-│
-├── demo/                   # Video demonstration guidelines
-│   └── README.md           # Instructions for video/RTSP streams
+├── hardware/               # ESP32-CAM firmware Arduino sketches
 │
 ├── tests/                  # Unit and diagnostics test package
 │   ├── test_drone_stream.py # RTSP stream verification tool
 │   └── test_gps.py         # Standalone serial GPS test utility
 │
-├── templates/              # Flask HTML templates (Dashboard & Citizen portal)
-├── static/                 # Front-end static assets (style.css & maps.js)
-└── models/                 # YOLO neural network configuration and weights files
+└── ... (other deployment files)
 ```
 
 ---
 
-## 🔧 Edge & Hardware Configuration
+## 🔧 Edge Hardware & Drone Integration
+ASTROPATH connects custom hardware components and autopilot controllers to coordinate autonomous surveying:
+*   **Edge Optical Payload:** Low-power WiFi streaming from ESP32-CAM optical modules.
+*   **Onboard Location Sensors:** NMEA serial communication via NEO-6M GPS modules.
+*   **Flight Controllers:** MAVLink-based radio telemetry links with PX4 or ArduPilot SITL systems.
 
-### 1. ESP32-CAM Setup
-The ESP32-CAM serves as a low-cost, edge-deployed camera unit.
-1.  Navigate to `hardware/esp32_cam/` and upload the provided sketch to your ESP32 board using the Arduino IDE.
-2.  Once connected to your local Wi-Fi network, the ESP32 serial console will output its local streaming IP (e.g., `http://192.168.1.55:81/stream`).
-3.  Open `config.py` and modify the following value:
-    ```python
-    CAMERA_SOURCE = "http://192.168.1.55:81/stream"
-    ```
-
-### 2. GPS NEO-6M Integration
-To mount a serial GPS receiver on a ground patrol vehicle:
-1.  Connect the GPS module's TX/RX pins to your PC using a USB-to-TTL converter.
-2.  Update `config.py` to enable the serial reader:
-    ```python
-    GPS_ENABLED = True
-    GPS_PORT = "COM3"  # On Linux, use "/dev/ttyUSB0"
-    ```
-3.  Run diagnostics: `python tests/test_gps.py` to confirm NMEA coordinates are parsing correctly.
-
----
-
-## 🚁 Drone & Mission Controller Integration
-
-ASTROPATH interfaces with flight controllers running PX4 or ArduPilot firmware to orchestrate autonomous flight profiles.
-
-### Telemetry Connection
-The system connects to physical or simulated flight systems using MAVLink over serial or UDP connections:
-
-```python
-# config.py
-DRONE_ENABLED = True
-DRONE_CONNECTION_STRING = "127.0.0.1:14550"  # Local SITL or telemetry radio
-DRONE_STREAM_URL = "rtsp://192.168.1.100:8554/live"
-```
-
-To run a simulated mission alongside the telemetry pipeline:
-1. Run your ArduPilot SITL simulator.
-2. Test the telemetric stream parser:
-   ```bash
-   python tests/test_drone_stream.py
-   ```
-3. Run the aerial surveyor:
-   ```bash
-   python src/detection/drone_detector.py
-   ```
-
-*For step-by-step guidance on setting up flight simulators, read [DRONE_GUIDE.md](docs/DRONE_GUIDE.md).*
-
----
+*For detailed setups, schematic wiring, and SITL parameters, read the [Edge Hardware & Drone Integration Guide](docs/HARDWARE_GUIDE.md).*
 
 ## 🤖 Autonomous Flight & Safety Simulation Engine
+To test the end-to-end logical flow of the ASTROPATH architecture, the repository contains a standalone physical and environmental flight simulation engine at [autonomous_flight_system.py](src/navigation/autonomous_flight_system.py). It models takeoff, sensor fusion (3D Kalman Filter), AI perception, lateral/vertical bypass detours, and emergency RTH landing safety overrides.
 
-To test the end-to-end logical flow of the ASTROPATH architecture, the repository contains a standalone physical and environmental flight simulation engine at [autonomous_flight_system.py](src/navigation/autonomous_flight_system.py).
-
-This simulator models the flight cycle through 10 chronological steps, dynamically injecting real-world obstacles and sensor anomalies:
-1. **Takeoff & Altitude Hold:** Simulates GPS, Altimeter, and IMU sensor data.
-2. **Sensor Fusion:** Fuses noisy telemetry measurements using a **Kalman Filter** state estimator.
-3. **AI Vision Perception:** Scans roads for potholes and detects tree branches, hanging electrical wires, and birds in front of the drone.
-4. **Threat Assessment:** Evaluates spatial distance and collision danger scores.
-5. **Re-routing Engine:** Generates detours (e.g., lateral bypass for trees, climb profile for wires, hover-in-place for birds).
-6. **Battery & Weather Monitor:** Dynamically injects heavy wind gusts, severe downpours, and drains battery capacity.
-7. **Safety Decision Engine:** Overrides standard flight paths to trigger RTH and safe emergency landing procedures if safety limits are breached.
-
-### How to Run the Simulator
-```bash
-python src/navigation/autonomous_flight_system.py
-```
-
-### Complete Simulation Output Logs
-```text
-[22:36:56] [INFO] [ASTROPATH_Core] Mission Planner initialised. Start: (17.6599, 75.9064) | Target: (17.6682, 75.9125)
-[22:36:56] [INFO] [ASTROPATH_Core] =========================================================
-[22:36:56] [INFO] [ASTROPATH_Core] 🚀 ASTROPATH AUTONOMIC FLIGHT MISSION STARTING
-[22:36:56] [INFO] [ASTROPATH_Core] =========================================================
-[22:36:56] [INFO] [ASTROPATH_Core] Generated 10 mission waypoints successfully.
-
---- [MISSION FLIGHT STEP 1/10] Mode: TAKEOFF ---
-Monitor Stats - Battery: 95.5% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Flight Controller: Takeoff complete. Holding altitude 15.0m.
-Sensor Fusion State: Lat: 17.659967 | Lon: 75.906418 | Alt: 8.11m
-AI Vision Layer: Scan clear. No environmental obstacles.
-
---- [MISSION FLIGHT STEP 2/10] Mode: CRUISE ---
-Monitor Stats - Battery: 91.0% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.660322 | Lon: 75.906709 | Alt: 10.85m
-AI Vision Layer: Scan clear. No environmental obstacles.
-
---- [MISSION FLIGHT STEP 3/10] Mode: CRUISE ---
-Monitor Stats - Battery: 86.5% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.660724 | Lon: 75.907044 | Alt: 12.23m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Tree | Confidence: 94.0% | Spatial Offset: (x: 1.2m, y: 5.0m)
-[WARNING] Threat Assessment: Collision Risk Alert! Danger Score: 0.70 [Tree]
-🔄 Re-routing Engine activated due to: Tree obstacle.
-Detour Action: Lateral bypass (+4m North-East deviation).
-Autopilot Command: Adjusting heading/speed vectors to detours.
-
---- [MISSION FLIGHT STEP 4/10] Mode: CRUISE ---
-Monitor Stats - Battery: 82.0% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.661174 | Lon: 75.907402 | Alt: 13.12m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Pothole | Confidence: 96.0% | Spatial Offset: (x: 0.068m, y: 3.984m)
-
---- [MISSION FLIGHT STEP 5/10] Mode: CRUISE ---
-Monitor Stats - Battery: 77.5% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.661662 | Lon: 75.907758 | Alt: 13.72m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Wire | Confidence: 89.0% | Spatial Offset: (x: 0.1m, y: 3.5m)
-[WARNING] Threat Assessment: Collision Risk Alert! Danger Score: 0.80 [Wire]
-🔄 Re-routing Engine activated due to: Wire obstacle.
-Detour Action: Vertical bypass (+6m climb profile).
-Autopilot Command: Adjusting heading/speed vectors to detours.
-
---- [MISSION FLIGHT STEP 6/10] Mode: CRUISE ---
-[WARNING] 💨 Wind speed sensor reporting high gust: 28.5 knots!
-Monitor Stats - Battery: 73.0% | Wind: 28.5 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.662179 | Lon: 75.908141 | Alt: 15.88m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Pothole | Confidence: 96.0% | Spatial Offset: (x: 1.969m, y: 2.295m)
-[CRITICAL] ⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!
-Safety Decision Engine Override: Activating Auto-stabilisation. Reducing velocity to 1.5m/s.
-
---- [MISSION FLIGHT STEP 7/10] Mode: CRUISE ---
-Monitor Stats - Battery: 68.5% | Wind: 28.5 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.662725 | Lon: 75.908525 | Alt: 17.35m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Bird | Confidence: 91.0% | Spatial Offset: (x: -2.5m, y: 6.0m)
-[WARNING] Threat Assessment: Collision Risk Alert! Danger Score: 0.55 [Bird]
-🔄 Re-routing Engine activated due to: Bird obstacle.
-Detour Action: Hover-in-place state activated (wait for clearing).
-Autopilot Command: Adjusting heading/speed vectors to detours.
-[CRITICAL] ⚠️ SAFETY INTERVENTION: High wind velocity limit exceeded!
-Safety Decision Engine Override: Activating Auto-stabilisation. Reducing velocity to 1.5m/s.
-
---- [MISSION FLIGHT STEP 8/10] Mode: CRUISE ---
-[WARNING] 🌧️ Rain rate sensor reporting heavy downpour: 18.0 mm/h!
-Monitor Stats - Battery: 64.0% | Wind: 12.0 kts | Rain: 18.0 mm/h
-Sensor Fusion State: Lat: 17.663282 | Lon: 75.908951 | Alt: 16.74m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Pothole | Confidence: 96.0% | Spatial Offset: (x: -2.912m, y: 4.445m)
-[CRITICAL] ⚠️ SAFETY INTERVENTION: Extreme precipitation detected!
-
---- [MISSION FLIGHT STEP 9/10] Mode: CRUISE ---
-[WARNING] 🔋 Battery capacity dropped to critical levels: 12.0%!
-Monitor Stats - Battery: 12.0% | Wind: 12.0 kts | Rain: 0.0 mm/h
-Sensor Fusion State: Lat: 17.663888 | Lon: 75.909387 | Alt: 16.37m
-AI Vision Layer: Detected 1 objects.
-  └─ Label: Pothole | Confidence: 96.0% | Spatial Offset: (x: 1.137m, y: 3.317m)
-[CRITICAL] ⚠️ SAFETY INTERVENTION: Critical Low Battery!
-🚨 Emergency Landing AI locating nearest safe landing zone (LZ)...
-Safe LZ calculated at: (17.663908, 75.909367). Beginning vertical descent.
-[CRITICAL] Autopilot Override: Safety Decision Engine taking command. Navigating to Safe LZ.
-🛑 Safety Override Landing Completed. System safe. Flight operations halted.
-
-=========================================================
-⚠️ MISSION ENDED VIA EMERGENCY SAFE LANDING OVERRIDE
-=========================================================
-```
-
----
+*To run the simulation and view the complete telemetry log outputs, read the [Simulation Guide & Logs](docs/SIMULATION.md).*
 
 ## 📊 RESTful API Specifications
+The centralized Flask server exposes RESTful API endpoints for drone telemetric logs, citizen reporting uploads, and real-time dashboard analytics synchronisation.
 
-| Method | Endpoint | Description | Sample Response Payload |
-|:---|:---|:---|:---|
-| **GET** | `/health` | Ingestion layer health check | `{"status": "healthy", "gpu_available": false}` |
-| **GET** | `/api/detections` | Retrieve registered road defects | `[{"id": 12, "latitude": 17.65, "severity": "High"}]` |
-| **GET** | `/api/stats` | Aggregated telemetry & count statistics | `{"total_potholes": 84, "high_severity": 19}` |
-| **POST**| `/api/upload` | Upload citizen-submitted road defect | `{"status": "success", "detection_id": 232}` |
+*For the complete specifications table and Python upload client scripts, read the [REST API Specifications](docs/API.md).*
 
-### Sample Citizen Reporting Request
-```python
-import requests
-
-url = "http://localhost:5000/api/upload"
-payload = {
-    "latitude": "17.6682",
-    "longitude": "75.9015",
-    "severity": "High"
-}
-files = {
-    "image": ("defect.jpg", open("defect.jpg", "rb"), "image/jpeg")
-}
-
-response = requests.post(url, data=payload, files=files)
-print(response.json())
-```
 
 ---
 
