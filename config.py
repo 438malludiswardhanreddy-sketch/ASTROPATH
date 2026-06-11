@@ -1,4 +1,4 @@
-﻿"""
+"""
 ASTROPATH Configuration Module
 Centralised configuration for model paths, thresholds, and API endpoints
 """
@@ -183,7 +183,7 @@ USE_CUDA = False
 # FLASK_HOST = "0.0.0.0" allows access from other devices on the network
 # FLASK_HOST = "127.0.0.1" allows access ONLY from this computer
 FLASK_HOST = "0.0.0.0"
-FLASK_PORT = 5000
+FLASK_PORT = int(os.environ.get('PORT', 5000))
 FLASK_DEBUG = False  # Set to False for production!
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB

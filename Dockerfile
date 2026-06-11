@@ -43,7 +43,7 @@ ENV FLASK_ENV=production
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:5000/health')"
+    CMD python -c "import requests, os; port = os.environ.get('PORT', '5000'); requests.get(f'http://localhost:{port}/health')"
 
 # Run application with waitress for production
 CMD ["python", "app.py"]

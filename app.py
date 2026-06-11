@@ -66,10 +66,14 @@ def load_models():
         
         # Load classifier if available
         if os.path.exists(config.CLASSIFIER_MODEL):
-            from tensorflow import keras
-            logger.info("Loading classifier model...")
-            classifier_model = keras.models.load_model(config.CLASSIFIER_MODEL)
-            logger.info("✓ Classifier model loaded successfully")
+            try:
+                from tensorflow import keras
+                logger.info("Loading classifier model...")
+                classifier_model = keras.models.load_model(config.CLASSIFIER_MODEL)
+                logger.info("✓ Classifier model loaded successfully")
+            except ImportError:
+                logger.warning("TensorFlow/Keras not installed. Skipping classifier model loading.")
+                classifier_model = None
         else:
             logger.warning("Classifier model not found. Using YOLO only.")
             
