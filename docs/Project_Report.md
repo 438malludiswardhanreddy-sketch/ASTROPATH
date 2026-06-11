@@ -1,6 +1,6 @@
 # ASTROPATH: Real-Time Edge-Assisted Sensor Fusion and Autonomous Drone Navigation for Road Damage Diagnostics
 
-**Author:** ASTROPATH Engineering Team  
+**Author & Owner:** Mallu Diswardhan Reddy  
 **Date:** June 2026  
 **Document Reference:** docs/Project_Report.md  
 

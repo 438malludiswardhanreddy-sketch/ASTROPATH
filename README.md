@@ -515,9 +515,9 @@ We welcome contributions from researchers, smart-city engineers, and software pr
 
 ## 👥 Team & Contact
 
-*   **Lead Developer:** Mallu Diswardhan Reddy  
+*   **Author & Owner:** Mallu Diswardhan Reddy  
 *   **Email:** [438malludiswardhanreddy@gmail.com](mailto:438malludiswardhanreddy@gmail.com)  
-*   **Organization:** Solapur Municipal Corporation (Smart City Initiative)
+*   **GitHub:** [@438malludiswardhanreddy-sketch](https://github.com/438malludiswardhanreddy-sketch)
 
 ---
 

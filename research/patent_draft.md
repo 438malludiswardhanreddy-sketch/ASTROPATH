@@ -23,7 +23,7 @@
 ---
 
 ### 2. APPLICANT(S)
-*   **Name:** ASTROPATH Innovation Laboratories  
+*   **Name:** Mallu Diswardhan Reddy  
 *   **Nationality:** Indian  
 *   **Address:** Pune-Solapur Expressway Corridor, Maharashtra, India  
 
