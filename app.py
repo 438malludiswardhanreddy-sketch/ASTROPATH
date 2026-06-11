@@ -433,9 +433,13 @@ def update_detection_status(detection_id):
 
 @app.route('/api/upload', methods=['POST'])
 def upload_detection():
-    """Upload detection from mobile/citizen"""
+    """Upload detection from mobile/citizen/hardware"""
     try:
-        data = request.get_json()
+        # Handle both JSON and Form Data (for ESP32 easy upload)
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form.to_dict()
         
         # Get location from request or current location
         lat = data.get('latitude')
@@ -446,33 +450,47 @@ def upload_detection():
         else:
             source = 'user'
         
-        # Decode image if provided
+        # Decode image if provided (Base64 in JSON)
         image_path = None
         if 'image' in data:
-            image_data = data['image'].split(',')[1] if ',' in data['image'] else data['image']
-            image_bytes = base64.b64decode(image_data)
-            
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_filename = f"citizen_{timestamp}.jpg"
-            image_path = os.path.join(config.DETECTIONS_DIR, image_filename)
-            
-            os.makedirs(config.DETECTIONS_DIR, exist_ok=True)
-            
-            # Save image
-            nparr = np.frombuffer(image_bytes, np.uint8)
-            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            cv2.imwrite(image_path, img)
+            try:
+                image_data = data['image'].split(',')[1] if ',' in data['image'] else data['image']
+                image_bytes = base64.b64decode(image_data)
+                
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                image_filename = f"detection_{timestamp}.jpg"
+                image_path = os.path.join(config.DETECTIONS_DIR, image_filename)
+                
+                os.makedirs(config.DETECTIONS_DIR, exist_ok=True)
+                
+                # Save image
+                nparr = np.frombuffer(image_bytes, np.uint8)
+                img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                cv2.imwrite(image_path, img)
+            except Exception as e:
+                logger.error(f"Base64 image decode error: {e}")
+                
+        # Handle File Upload (Multipart Form Data)
+        elif 'file' in request.files:
+            file = request.files['file']
+            if file and file.filename != '':
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                image_filename = f"node_{timestamp}.jpg"
+                image_path = os.path.join(config.DETECTIONS_DIR, image_filename)
+                os.makedirs(config.DETECTIONS_DIR, exist_ok=True)
+                file.save(image_path)
+                logger.info(f"File uploaded via multipart: {image_path}")
         
         # Add to database
         detection_data = {
             'latitude': lat,
             'longitude': lon,
             'severity': data.get('severity', 'Medium'),
-            'confidence': data.get('confidence', 0.5),
+            'confidence': float(data.get('confidence', 0.5)),
             'image_path': image_path,
-            'source': 'citizen',
+            'source': data.get('source', 'hardware_node'),
             'location_source': source,
-            'description': data.get('description', '')
+            'description': data.get('description', 'Triggered by sensor')
         }
         
         detection_id = db.add_detection(detection_data)
