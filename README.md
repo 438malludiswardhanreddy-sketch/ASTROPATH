@@ -1,4 +1,6 @@
-# 🚀 ASTROPATH: Automated Smart Technology for Road Observation, Planning, Analysis, Tracking & Healing
+# 🚀 ASTROPATH: Sky-View Autonomous Drone Navigation and Road Damage Detection System
+
+The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (meaning *View* or *Way*), representing a sky-view system for road damage monitoring and rapid response coordination.
 
 ASTROPATH is an end-to-end autonomous AI and IoT ecosystem designed to automate the lifecycle of urban road damage detection, severity classification, and rapid maintenance reporting. By fusing **Autonomous Aerial Drones (PX4/ArduPilot)**, **Edge AI Devices (ESP32-CAM/Raspberry Pi)**, and **Mobile Citizen Portals**, ASTROPATH builds a real-time, high-accuracy digital twin of municipal road infrastructure.
 

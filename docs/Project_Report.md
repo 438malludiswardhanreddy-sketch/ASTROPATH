@@ -1,4 +1,4 @@
-# ASTROPATH: Real-Time Edge-Assisted Sensor Fusion and Autonomous Drone Navigation for Road Damage Diagnostics
+# ASTROPATH: Sky-View Autonomous Drone Navigation and Road Damage Detection System
 
 **Author & Owner:** Mallu Diswardhan Reddy  
 **Date:** June 2026  
@@ -7,7 +7,7 @@
 ---
 
 ## 1. Abstract
-Urban road infrastructure maintenance remains a significant challenge for municipality corporations in developing economies. Conventional manual inspection techniques are slow, error-prone, and hazardous. This report presents **ASTROPATH**, an end-to-end, edge-assisted, autonomous aerial system designed to automate road damage diagnostics. Incorporating a custom 3D Kalman Filter for sensor fusion, a dual-stage neural network framework (YOLOv4-tiny and MobileNetV2) for edge-based classification, and a dynamic safety-priority route optimisation engine, ASTROPATH provides continuous pothole mapping and rapid response coordination. The system runs real-time perception pipelines on Raspberry Pi and ESP32-CAM hardware interfaces, syncing telemetry data with a centralised municipal dashboard to streamline public work repairs.
+The name **ASTROPATH** is derived from **ASTRO** (meaning *Sky*) and **PATH** (meaning *View* or *Way*), representing a sky-view system for autonomous aerial inspection and road damage diagnostics. Urban road infrastructure maintenance remains a significant challenge for municipality corporations in developing economies. Conventional manual inspection techniques are slow, error-prone, and hazardous. This report presents **ASTROPATH**, an end-to-end, edge-assisted, autonomous aerial system designed to automate road damage diagnostics. Incorporating a custom 3D Kalman Filter for sensor fusion, a dual-stage neural network framework (YOLOv4-tiny and MobileNetV2) for edge-based classification, and a dynamic safety-priority route optimisation engine, ASTROPATH provides continuous pothole mapping and rapid response coordination. The system runs real-time perception pipelines on Raspberry Pi and ESP32-CAM hardware interfaces, syncing telemetry data with a centralised municipal dashboard to streamline public work repairs.
 
 ---
 
